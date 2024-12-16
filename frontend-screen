@@ -1,0 +1,2 @@
+chdir prototype-frontend
+screen bash -c "npm start"

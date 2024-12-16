@@ -1,0 +1,342 @@
+{
+  "rules": {
+    "r_notify": {
+      "name": "Notify",
+      "elements": [
+        {
+        "name": "Notify 1",
+        "type": "action",
+        "action_type": "notify",
+        "text": "I am notification 1",
+        "priority": "info"
+        },
+        {
+        "name": "Notify 2",
+        "type": "action",
+        "action_type": "notify",
+        "text": "I am notification 2",
+        "priority": "info"
+        }
+      ],
+      "repeat_interval": 60,
+      "repeating": true
+    },
+    "r_light_notify": {
+      "name": "Light Notify",
+      "elements": [
+        {
+        "name": "Notify 1",
+        "type": "action",
+        "action_type": "notify",
+        "text": "I am notification 1",
+        "priority": "info"
+        },
+        {
+        "name": "Check Light Level",
+        "type": "condition",
+        "first_argument": {
+          "argument": "s_full_light",
+          "type": "sensor",
+          "start_time_difference": 0,
+          "end_time_difference": 0
+        },
+        "comparison_operator": "greater than",
+        "second_argument": {
+          "argument": 100,
+          "type": "constant",
+          "start_time_difference": 0,
+          "end_time_difference": 0
+        },
+        "then": [
+          {
+          "name": "Notify 3",
+          "type": "action",
+          "action_type": "notify",
+          "text": "Light is brighter than 100",
+          "priority": "info"
+          }
+        ],
+        "else": [
+          {
+          "name": "Notify 4",
+          "type": "action",
+          "action_type": "notify",
+          "text": "Light is not brighter than 100",
+          "priority": "info"
+          }
+        ]
+        },
+        {
+        "name": "Send Light Level",
+        "type": "action",
+        "action_type": "send",
+        "values_to_send": ["s_full_light"],
+        "negative_time_offset_start": 10,
+        "negative_time_offset_end": 0
+        }
+      ],
+      "repeat_interval": 10,
+      "repeating": true
+    },
+    "r_weather_notify": {
+      "name": "Weather Notify",
+      "elements": [
+        {
+        "name": "Check Weather",
+        "type": "condition",
+        "first_argument": {
+          "argument": "s_weather",
+          "type": "sensor",
+          "start_time_difference": 0,
+          "end_time_difference": 0
+        },
+        "comparison_operator": "greater than",
+        "second_argument": {
+          "argument": 50,
+          "type": "constant",
+          "start_time_difference": 0,
+          "end_time_difference": 0
+        },
+        "then": [
+          {
+          "name": "Notify 5",
+          "type": "action",
+          "action_type": "notify",
+          "text": "It is likely to rain",
+          "priority": "info"
+          }
+        ],
+        "else": [
+          {
+          "name": "Notify 6",
+          "type": "action",
+          "action_type": "notify",
+          "text": "It is unlikely to rain",
+          "priority": "info"
+          }
+        ]
+        },
+        {
+        "name": "Send Weather Level",
+        "type": "action",
+        "action_type": "send",
+        "values_to_send": ["s_weather"],
+        "negative_time_offset_start": 10,
+        "negative_time_offset_end": 0
+        }
+      ],
+      "repeat_interval": 60,
+      "repeating": true
+    },
+    "r_hum_temp_pres_send": {
+      "name": "Humidity, Temperature, Pressure Send",
+      "elements": [
+        {
+        "name": "Measure Humidity",
+        "type": "action",
+        "action_type": "sense",
+        "sensor_id": "s_hum"
+        },
+        {
+        "name": "Measure Temperature",
+        "type": "action",
+        "action_type": "sense",
+        "sensor_id": "s_temp"
+        },
+        {
+        "name": "Measure Pressure",
+        "type": "action",
+        "action_type": "sense",
+        "sensor_id": "s_pres"
+        },
+        {
+        "name": "Send Humidity",
+        "type": "action",
+        "action_type": "send",
+        "values_to_send": ["s_hum"],
+        "negative_time_offset_start": 10,
+        "negative_time_offset_end": 0
+        },
+        {
+        "name": "Send Temperature",
+        "type": "action",
+        "action_type": "send",
+        "values_to_send": ["s_temp"],
+        "negative_time_offset_start": 10,
+        "negative_time_offset_end": 0
+        },
+        {
+        "name": "Send Pressure",
+        "type": "action",
+        "action_type": "send",
+        "values_to_send": ["s_pres"],
+        "negative_time_offset_start": 10,
+        "negative_time_offset_end": 0
+        }
+      ],
+      "repeat_interval": 10,
+      "repeating": true
+    }
+  },
+  "sensors": {
+    "s_full_light": {
+      "name": "Full Spectrum Light Level",
+      "type": "I2C",
+      "i2c_address": "0x29",
+      "actions": [
+        {
+          "type": "write",
+          "data": [
+            "0b10100000",
+            "0b00000011"
+          ],
+          "length": 0
+        },
+        {
+          "type": "write",
+          "data": [
+            "0b10100001",
+            "0b00010000"
+          ],
+          "length": 0
+        },
+        {
+          "type": "sleep",
+          "data": ["1"],
+          "length": 0
+        },
+        {
+          "type": "read",
+          "data": [
+            "0b10110100"
+          ],
+          "length": 2
+        }
+      ],
+      "factor": 1,
+      "offset": 0,
+      "msb_first": false
+    },
+    "s_hum": {
+      "name": "Humidity",
+      "type": "I2C",
+      "i2c_address": "0x77",
+      "actions": [
+        {
+          "type": "write",
+          "data": [
+            "0xF2",
+            "0b00000001"
+          ],
+          "length": 0
+        },
+        {
+          "type": "write",
+          "data": [
+            "0xF4",
+            "0b00100101"
+          ],
+          "length": 0
+        },
+        {
+          "type": "sleep",
+          "data": ["1"],
+          "length": 0
+        },
+        {
+          "type": "read",
+          "data": [
+            "0xFD"
+          ],
+          "length": 2
+        }
+      ],
+      "factor": 0.0040258789,
+      "offset": -50,
+      "msb_first": true
+    },
+    "s_temp": {
+      "name": "Temperature",
+      "type": "I2C",
+      "i2c_address": "0x77",
+      "actions": [
+        {
+          "type": "write",
+          "data": [
+            "0xF2",
+            "0b00000001"
+          ],
+          "length": 0
+        },
+        {
+          "type": "write",
+          "data": [
+            "0xF4",
+            "0b00100101"
+          ],
+          "length": 0
+        },
+        {
+          "type": "sleep",
+          "data": ["1"],
+          "length": 0
+        },
+        {
+          "type": "read",
+          "data": [
+            "0xFA"
+          ],
+          "length": 2
+        }
+      ],
+      "factor": 0.0096877,
+      "offset": -293.15,
+      "msb_first": true
+    },
+    "s_pres": {
+      "name": "Pressure",
+      "type": "I2C",
+      "i2c_address": "0x77",
+      "actions": [
+        {
+          "type": "write",
+          "data": [
+            "0xF2",
+            "0b00000001"
+          ],
+          "length": 0
+        },
+        {
+          "type": "write",
+          "data": [
+            "0xF4",
+            "0b00100101"
+          ],
+          "length": 0
+        },
+        {
+          "type": "sleep",
+          "data": ["1"],
+          "length": 0
+        },
+        {
+          "type": "read",
+          "data": [
+            "0xF7"
+          ],
+          "length": 2
+        }
+      ],
+      "factor": 1,
+      "offset": 0,
+      "msb_first": true
+    },
+    "s_weather": {
+      "name": "Weather",
+      "type": "network"
+    }
+  },
+  "actors": {
+
+  }
+}

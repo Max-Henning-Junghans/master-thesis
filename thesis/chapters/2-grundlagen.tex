@@ -1,0 +1,216 @@
+% !TEX root = ../thesis.tex
+\chapter{Grundlagen}\label{ch:grundlagen}
+In diesem Kapitel werden Grundlagen erläutert, die für die Entwicklung eines universellen Sensor- und Aktuatorsystems für Smart Gardening relevant sind.
+Dabei werden zunächst Kommunikationsschnittstellen und Protokolle vorgestellt, die es ermöglichen, Daten zwischen verschiedenen Geräten und Systemen auszutauschen.
+Zu diesen gehören serielle Schnittstellen, Industrieprotokolle, Internetprotokolle und Funkprotokolle sowie die entsprechenden Netzwerktypen.
+Anschließend werden Hardwareentwicklungskonzepte wie die IP-Schutzart, Breakout Boards, GPIO-Pins und das Qwiic-System erläutert, Mikrocontroller und Boards wie der Raspberry Pi, ESP32 und Arduino vorgestellt und Sensoren und Aktuatoren beschrieben.
+Zuletzt werden relevante Pythonkonzepte sowie MicroPython, Flask und React für die Webentwicklung und der Datenaustausch mittels JSON erläutert.
+
+
+
+\section{Kommunikationsschnittstellen und Protokolle}
+In diesem Abschnitt werden verschiedene Kommunikationsschnittstellen und Protokolle vorgestellt.
+Sie dienen dazu, Daten zwischen verschiedenen Geräten und Systemen auszutauschen und ermöglichen die Interaktion zwischen Hard- und Softwarekomponenten.
+Dabei werden zunächst allgemeine serielle Schnittstellen wie I2C, SPI, UART und 1-Wire vorgestellt, gefolgt von speziellen Industrieprotokollen wie Modbus, CAN-Bus, Profibus und OPC UA.
+Danach werden die Internetprotokolle HTTP und HTTPS, sowie das auf HTTP basierende REST-Paradigma erläutert.
+Anschließend werden verschiedene Netzwerktypen wie PAN, LAN, WAN und HAN beschrieben, gefolgt von Funkprotokollen wie WLAN, Bluetooth, ZigBee und LoRaWAN, sowie der RFID-Technologie.
+
+
+\subsection*{Serielle Schnittstellen}
+\emph{Inter-Integrated Circuit} (I2C) ist ein synchroner serieller Datenbus, welcher auf einem Master-Slave-Prinzip basiert und somit die Kommunikation mit mehreren Geräten ermöglicht~\cite{I2CReview,I2CUnderstanding}.
+Für die Kommunikation werden zwei Leitungen benötigt: eine \emph{Datenleitung} (SDA) und eine \emph{Taktleitung} (SCL).
+Jeder Slave hat eine eindeutige 7-Bit-Adresse, die vom Master verwendet wird, um den Slave zu adressieren, wobei das 8. Bit der Adresse angibt, ob der Master Daten senden oder empfangen möchte.
+
+\pagebreak
+
+Auch \emph{Serial Peripheral Interface} (SPI) ist ein synchroner serieller Datenbus, der auf einem Master-Slave-Prinzip basiert und die Kommunikation mit mehreren Geräten ermöglicht~\cite{SPIProtocol}.
+Dabei verwendet SPI vier Leitungen: eine \emph{Datenleitung vom Master zum Slave} (MOSI), eine \emph{Datenleitung vom Slave zum Master} (MISO), eine \emph{Taktleitung} (SCLK) und eine Leitung für die \emph{Chip-Selektion} (CS).
+Im Gegensatz zu I2C benötigt SPI keine Adressierung, da jedes Gerät über eine eigene Chip-Selektionsleitung angesprochen wird.
+Die anderen Leitungen sind zwischen allen Geräten gemeinsam genutzt.
+
+\emph{Universal Asynchronous Receiver Transmitter} (UART) ist eine asynchrone serielle Schnittstelle, die für die einfache Punkt-zu-Punkt-Kommunikation zwischen zwei Geräten verwendet wird~\cite{UARTProtocol}.
+Dabei werden die Daten über zwei Leitungen übertragen: eine \emph{Datenleitung vom Sender zum Empfänger} (TX) und eine \emph{Datenleitung vom Empfänger zum Sender} (RX).
+Da UART asynchron ist und keine Taktleitung verwendet, müssen Sender und Empfänger die gleiche \emph{Baudrate}, also die Geschwindigkeit der Datenübertragung, verwenden.
+Dabei ist UART eng mit dem \emph{RS232}-Standard verwandt, der eine spezifische Spannungspegel- und Steckerbelegung definiert.
+
+\emph{1-Wire} ist ein asynchroner serieller Datenbus, der auf einem Master-Slave-Prinzip basiert und die Kommunikation mit mehreren Geräten ermöglicht~\cite{OneWireProtocol}.
+Dabei können hunderte Geräte an einem 1-Wire-Bus angeschlossen werden, wobei jedes Gerät eine eindeutige 64-Bit-Adresse besitzt.
+Die Kommunikation erfolgt über eine \emph{Datenleitung}, die bidirektional verwendet wird und gleichzeitig als Stromversorgung für die angeschlossenen Geräte dient.
+Gleichzeitig sind Kabellängen von bis zu 300 Metern möglich.
+
+
+\subsection*{Industrieprotokolle}
+\emph{Modbus} ist ein Master-Slave basierendes Kommunikationsprotokoll, das in der industriellen Automatisierung weitverbreitet ist und als serielle sowie internetbasierte Variante existiert~\cite{Modbus}.
+In der seriellen Variante hat jeder Slave eine 8-Bit-Adresse, die vom Master verwendet wird, um den Slave zu adressieren, wobei 247 Adressen nutzbar sind.
+Ein Datenrahmen ist hierbei 256 Byte groß und enthält die Adresse des Slaves, einen Prüfwert und die Nutzdaten.
+In der internetbasierten Variante wird Modbus über TCP/IP mit Port 502 übertragen und verpackt die seriellen Datenrahmen in TCP-Pakete.
+In diesen Datenrahmen befinden sich im Normalfall Datenanfragen oder die entsprechenden Antworten.
+
+\emph{Controller Area Network Bus} (CAN-Bus) ist ein serielles Bussystem, das mehrere Geräte in einem Netzwerk miteinander verbindet und in der Automobilindustrie weitverbreitet ist~\cite{CANBus}.
+Dabei besteht der Bus aus zwei Leitungen: \emph{CAN-High} und \emph{CAN-Low}, die differenziell betrieben werden und eine hohe Störsicherheit bieten.
+Da alle am Bus angeschlossenen Geräte gleichwertig sind, müssen Kollisionen von den Sendern erkannt und behoben werden.
+Nachrichten in CAN-Bus-Netzwerken werden dabei nicht an Geräte adressiert, sondern mit IDs versehen, die den Inhalt der Nachricht beschreiben und die Empfänger entscheiden selbst, ob sie die Nachricht verarbeiten.
+
+\emph{Process Field Bus} (Profibus) ist ein auf Token basierendes Kommunikationsprotokoll, das also den unterschiedlichen Geräten im Netzwerk durch Verwendung eines \emph{Tokens} eine gewisse Sendezeit garantiert~\cite{Fieldbus}.
+Es wird für Echtzeitkommunikation in der industriellen Automatisierung eingesetzt und kombiniert einen Token Austausch für Master-Stationen untereinander und ein Master-Slave-Verfahren für die Kommunikation mit Slave-Stationen.
+Profibus unterscheidet zwischen hochpriorisierten und niedrig priorisierten Nachrichten, wobei hochpriorisierte Nachrichten Vorrang haben und niedrig priorisierte Nachrichten nur verarbeitet werden, wenn die sogenannte Token-Haltezeit dies erlaubt.
+
+\emph{Open Platform Communications Unified Architecture} (OPC UA) ist ein Kommunikationsstandard für die industrielle Automatisierung, der auf einer serviceorientierten Architektur basiert und sowohl Echtzeitkommunikation als auch historische Datenverwaltung unterstützt~\cite{OPCUA}.
+OPC UA bietet umfassende Sicherheitsfunktionen, darunter Verschlüsselung und Authentifizierung, ist plattformunabhängig, wodurch es auf verschiedenen Betriebssystemen und Geräten eingesetzt werden kann, und er ermöglicht die Integration von IoT-Anwendungen.
+
+
+\subsection*{HTTP, HTTPS und REST}
+\emph{Hypertext Transfer Protocol} (HTTP) ist ein weitverbreitetes Protokoll für die Übertragung von Daten über das Internet~\cite{HTTP}.
+Es definiert eine Reihe von Methoden, um auf \emph{Ressourcen} auf einem Server zuzugreifen, darunter \emph{GET}, \emph{POST}, \emph{PUT} und \emph{DELETE}.
+GET wird verwendet, um Ressourcen abzurufen, POST zum Senden von neuen Ressourcen, PUT zum Aktualisieren vorhandener Ressourcen und DELETE zum Löschen von Ressourcen.
+Ressourcen werden über \emph{URLs} identifiziert, die den Standort der Ressource auf dem Server angeben, wobei diese URLs als \emph{Endpunkte} bezeichnet werden.
+Aufbauend auf HTTP ist \emph{Hypertext Transfer Protocol Secure} (HTTPS), welches eine verschlüsselte Verbindung zwischen Client und Server ermöglicht.
+Dafür wird \emph{Transport Layer Security} (TLS) verwendet, um die Daten während der Übertragung zu verschlüsseln und die Integrität der Daten zu gewährleisten.
+
+\emph{Representational State Transfer} (REST) ist ein Architekturstil für die Entwicklung von Webschnittstellen, der auf HTTP basiert~\cite{REST}.
+RESTful APIs verwenden HTTP-Methoden wie GET, POST, PUT und DELETE, um auf Ressourcen zuzugreifen, die durch URLs eindeutig identifiziert werden, und sie zu manipulieren.
+Dabei werden die Daten meist im JSON- oder XML-Format übertragen und die APIs sind zustandslos, was bedeutet, dass keine Sitzungsinformationen zwischen Anfragen gespeichert werden.
+Es ermöglicht die Interaktion mit Servern über standardisierte Schnittstellen und ist plattformunabhängig, was die Integration in verschiedene Anwendungen erleichtert.
+
+
+\subsection*{Netzwerktypen}
+Netzwerktypen wie \emph{Personal Area Network} (PAN), \emph{Local Area Network} (LAN), \emph{Wide Area Network} (WAN) und \emph{Home Area Network} (HAN) beschreiben die geografische Ausdehnung und den Anwendungsbereich von Netzwerken.
+Diese können dabei sowohl kabellos als auch kabelgebunden sein und dienen der Kommunikation zwischen verschiedenen Geräten und Systemen.
+Ein \emph{PAN} ist für die Kommunikation körpernaher Geräte wie Smartphones, Wearables und Laptops gedacht, wobei hierfür Technologien wie Bluetooth oder USB eingesetzt werden~\cite{PAN}.
+Ein \emph{LAN} hingegen verbindet Geräte in einem begrenzten Bereich wie einem Gebäude oder einem Campus und wird oft über Ethernet-Kabel oder WLAN realisiert~\cite{LAN}.
+Eine Unterklasse von LANs stellen \emph{HANs} dar, die speziell für die Kommunikation von Geräten in einem Haushalt oder einer Wohnung ausgelegt sind~\cite{HAN}.
+Beispielsweise können hierüber Smart-Home-Geräte wie Thermostate oder Beleuchtungssysteme miteinander kommunizieren.
+Ein \emph{WAN} verbindet Geräte über große geografische Entfernungen hinweg und nutzt Technologien wie LoRaWAN oder zellulare Netzwerke~\cite{WAN}.
+
+
+\subsection*{Funkprotokolle}
+Funkprotokolle wie WLAN, Bluetooth, ZigBee und LoRaWAN ermöglichen die drahtlose Kommunikation zwischen Geräten.
+Sie werden in verschiedenen Anwendungen eingesetzt, von der Kurzstreckenkommunikation in IoT-Geräten bis hin zur Langstreckenübertragung in drahtlosen Sensornetzwerken.
+
+\emph{Wireless Local Area Network} (WLAN) oder genauer die IEEE 802.11 Familie ist ein weitverbreitetes Funkprotokoll für die drahtlose Kommunikation in lokalen Netzwerken~\cite{wifi}.
+Hierbei werden normalerweise sogenannte Access Points verwendet, mit denen sich andere Geräte verbinden können, welche wiederum über einen Router mit dem Internet verbunden sind.
+
+\emph{Bluetooth} ist ein Funkprotokoll für die drahtlose Kommunikation zwischen Geräten in unmittelbarer Nähe zueinander~\cite{bluetooth}.
+Hierbei läuft die Verbindung über ein zentrales Gerät, genannt \emph{Primary}, mit dem sich mehrere sogenannte \emph{Secondarys} verbinden können, wobei dieser Verbund als \emph{Piconet} bezeichnet wird.
+Weiterhin können sich mehrere Piconets zu einem \emph{Scatternet} zusammenschließen, wobei die Geräte in mehreren Piconets gleichzeitig aktiv sein können.
+
+\emph{ZigBee} ist ein Funkprotokoll, das speziell für die Kommunikation in drahtlosen Sensornetzwerken entwickelt wurde und als Mesh-Netzwerk organisiert ist~\cite{zigbee}.
+Hierbei weisen die Geräte unterschiedliche Rollen auf, nämlich \emph{Koordinatoren}, \emph{Router} und \emph{Endgeräte}.
+Koordinatoren setzen das Netzwerk auf und verwalten den Ein- und Austritt von Routern und Endgeräten, wobei Router die Weiterleitung von Daten übernehmen und Endgeräte nur Daten senden oder empfangen können.
+
+\emph{Long Range Wide Area Network} (LoRaWAN) ist ein Netzwerkprotokoll, das auf dem LoRa-Übertragungsverfahren basiert und für die drahtlose Kommunikation über große Entfernungen hinweg entwickelt wurde~\cite{lorawan}.
+Hierbei kommunizieren \emph{Endgeräte} mit sogenannten \emph{Gateways}, die die Daten an einen Server weiterleiten, der die Daten verarbeitet.
+LoRaWAN ermöglicht Reichweiten von mehreren Kilometern mit geringen Datenraten, wobei das genutzte Frequenzband zusätzlich Nutzungsbeschränkungen unterliegt.
+Gleichzeitig ist LoRaWAN ein Low-Power-Protokoll, das eine lange Batterielaufzeit ermöglicht.
+
+\emph{Radio Frequency Identification} (RFID) ist kein Protokoll per se, sondern ein Sender und Empfänger System, wobei der Sender ein RFID-Tag ist, das auf ein elektromagnetisches Signal reagiert und eine eindeutige Kennung zurücksendet und der Empfänger ein Lesegerät ist, das die Kennung ausliest~\cite{RFID}.
+Es wird häufig in Logistik und Inventarverwaltung eingesetzt, indem die Tags an Gegenständen angebracht werden, um diese zu identifizieren und zu verfolgen.
+
+
+\section{Hardwareentwicklung}
+In diesem Abschnitt werden unterschiedliche, für die Hardwareentwicklung relevante Grundlagen erläutert.
+Dabei wird zunächst auf die IP-Schutzart eingegangen, die die Eignung von Geräten für verschiedene Umgebungen und Anwendungen bestimmt.
+Anschließend werden Breakout Boards, GPIO-Pins und das Qwiic-System erläutert, sowie Mikrocontroller und Boards wie der Raspberry Pi, ESP32 und Arduino vorgestellt, die beliebte Plattformen für die Entwicklung von IoT- und Elektronikprojekten darstellen.
+Zuletzt werden Sensoren und Aktuatoren erläutert, die es ermöglichen, Umweltdaten zu messen und physikalische Aktionen auszuführen.
+
+
+\subsection*{IP-Schutzart}
+Der \emph{International Protection Code} (IP-Code) ist eine Schutzart, die mittels zwei Kennziffern angibt, wie gut Geräte gegen das Eindringen von Fremdkörpern und Wasser geschützt sind~\cite{IPCode}.
+Diese Schutzart ist wichtig, um die Eignung von Geräten für verschiedene Umgebungen und Anwendungen, insbesondere in der Industrie, zu bestimmen.
+Die erste Ziffer steht für den Schutz gegen Berührung und Fremdkörper, und kann zwischen 0, also kein Schutz und 6, also vollständiger Schutz gegen Berührungen und gleichzeitig staubdicht liegen.
+Die zweite Ziffer steht für den Schutz gegen das Eindringen von Wasser in unterschiedlichen Mengen und aus unterschiedlichen Richtungen.
+So steht 0 für keinen Schutz, 1 für Schutz gegen Tropfwasser, 6 für Schutz gegen Strahlwasser und 8 für Schutz gegen dauerhaftes Untertauchen, wobei die Zahl bis 9 hochgehen kann.
+Beispielsweise weisen die meisten Smartphones einen IP67 oder IP68 Schutz auf, während für Außensteckdosen meist mindestens IP44 eingesetzt wird
+
+
+\subsection*{Breakout Boards, GPIO-Pins und das Qwiic-System}
+In der Hardwareentwicklung werden oft sogenannte \emph{Breakout Boards} verwendet, die etwa Sensoren oder Mikrochips auf einer Platine beinhalten und die entsprechenden Anschlüsse nach außen führen sowie zusätzliche Funktionen wie Spannungsregler oder Pegelwandler bereitstellen~\cite{Breakout}.
+Diese erleichtern den Anschluss von Sensoren und anderen Geräten an Entwicklungsboards wie den Raspberry Pi, ESP32 oder Arduino, die über GPIO-Pins verfügen.
+\emph{General Purpose Input/Output Pins} (GPIO-Pins) sind dabei digitale Ein- und Ausgänge, die es ermöglichen, mit beispielsweise solchen Breakout Boards zu kommunizieren.
+Das \emph{Qwiic-System} ist für das I2C Protokoll entwickelt und vereinfacht einen solchen Anschluss dadurch, dass anstatt mehrerer einzelnen Kabel für Daten, Takt, Spannung und Erdung nur ein Kabel benötigt wird, um ein Breakout Board, das über einen Qwiic-Anschluss verfügt, anzuschließen~\cite{Qwiic}.
+
+
+\subsection*{Mikrocontroller und Boards}
+Der \emph{Raspberry Pi} ist ein Minicomputer, auf dem ein normales Betriebssystem wie Linux läuft, der über mehrere GPIO-Pins verfügt und an den auch Peripheriegeräte wie Maus, Tastatur und Bildschirm angeschlossen werden können~\cite{RaspberryPi}.
+
+\emph{Arduinos} und \emph{ESP32} sind Mikrocontroller, die speziell für die Entwicklung von Elektronikprojekten und IoT-Anwendungen entwickelt wurden~\cite{Arduino, ESP32}.
+Im Gegensatz zum Raspberry Pi laufen auf ihnen keine vollwertigen Betriebssysteme, sondern speziell entwickelte Programme.
+Diese Mikrocontroller verfügen über GPIO-Pins, die es ermöglichen, Sensoren, Aktuatoren und andere Geräte anzuschließen und zu steuern.
+Als Mikrocontroller sind sie im Vergleich zu einem Raspberry Pi leistungsschwächer, aber auch energieeffizienter und sie verfügen zusätzlich über die Möglichkeit, in einen Schlafmodus versetzt zu werden, um Energie zu sparen.
+
+
+\subsection*{Sensorik und Aktuatorik}
+Sensorik und Aktuatorik sind zwei wichtige Komponenten in der Hardwareentwicklung.
+\emph{Sensoren} messen Umweltdaten wie Temperatur, Feuchtigkeit oder Licht und geben diese entweder als analoges oder digitales Signal aus.
+Hierbei bedeutet analog, dass der Sensor eine Spannung ausgibt, die proportional zum gemessenen Wert ist und ausgelesen werden kann und digital, dass der Sensor den Messwert in einem nicht standardisierten binären Code ausgibt, der ausgelesen werden kann.
+
+\emph{Aktuatoren} setzen analoge oder digitale Steuerbefehle in eine physikalische Aktion um, meist eine Bewegung wie das Öffnen eines Ventils oder der Antrieb eines Motors.
+Wie zu den Sensoren bedeutet analog, dass der Aktuator eine Spannung benötigt, die proportional zur gewünschten Aktion ist und digital, dass der Aktuator einen ebenfalls nicht standardisierten binären Code benötigt, um die Aktion auszuführen.
+
+
+\section{Softwareentwicklung}
+In diesem Abschnitt werden unterschiedliche, für die Softwareentwicklung relevante Grundlagen erläutert.
+Dabei wird zunächst die Programmiersprache Python mit einigen für diese Arbeit relevanten Konzepten wie Pattern Matching, Dictionarys und Enums vorgestellt.
+Anschließend wird auf MicroPython eingegangen, das speziell für Mikrocontroller entwickelt wurde und auf der Python Spezifikation aufbaut.
+Danach werden das Python Framework Flask und das JavaScript Framework React erläutert, die für die Entwicklung von Webanwendungen verwendet werden.
+Zuletzt wird auf das Datenformat JSON eingegangen, das vielfach für den Datenaustausch im Internet verwendet wird.
+
+
+\subsection*{Python und MicroPython}
+\emph{Python} ist eine Programmiersprache, die als Skriptsprache, für objektorientierte und für funktionale Programmierung eingesetzt werden kann~\cite{Python3}.
+Zu den Konzepten in Python gehören unter anderem Pattern Matching, Dictionarys und Enums.
+\emph{Pattern Matching} wird in Python durch ein sogenanntes Match Case Statement realisiert, das es ermöglicht, anhand von Mustern Werte zu überprüfen und entsprechende Aktionen auszuführen.
+\emph{Dictionarys} sind eine spezielle Datenstruktur, die Schlüssel-Wert-Paare speichert und es ermöglicht, Werte anhand von Schlüsseln abzurufen.
+\emph{Enums} ermöglichen die Definition von benannten Konstanten als eigene Typen, die es ermöglichen, die Lesbarkeit und Wartbarkeit von Code zu verbessern.
+
+\emph{MicroPython} ist eine auf der Python Spezifikation aufbauende Programmiersprache, die speziell für Mikrocontroller entwickelt wurde~\cite{MicroPython}.
+Dabei wird ein Teil der Python Standardbibliothek unterstützt und die Sprache ist so angepasst, dass sie auf Mikrocontrollern mit wenig Speicher und Rechenleistung ausgeführt werden kann.
+MicroPython implementiert dabei einen Großteil der Python 3.4 Spezifikation und ausgewählte Teile der neueren Versionen, wobei es zusätzlich spezielle Bibliotheken für die Mikrocontroller-Programmierung beinhaltet.
+Somit können Python-Programme mit wenig Aufwand zu MicroPython-Programmen portiert werden.
+
+
+\subsection*{Flask und React}
+\emph{Flask} ist ein Python Framework, das es ermöglicht, HTTP-Server zu erstellen und Webanwendungen zu entwickeln~\cite{Flask}.
+Dafür können für \emph{Endpunkte} definiert werden, die auf HTTP-Methoden wie GET, POST, PUT und DELETE reagieren und Daten verarbeiten.
+
+\emph{React} ist ein JavaScript Framework, das es ermöglicht, reaktive Webanwendungen zu entwickeln~\cite{React}.
+Dafür setzt React auf wiederverwendbare Komponenten, die mit Parametern konfiguriert werden können sowie auf Variablen, die den Zustand der Anwendung speichern und für die Darstellung der Benutzeroberfläche verwendet werden.
+Dabei aktualisiert sich die Benutzeroberfläche automatisch, wenn sich dieser Zustand aktualisiert.
+
+
+\subsection*{Datenaustausch mittels JSON}
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=json, caption={
+	Beispiel für den Aufbau einer JSON Datei.
+	},
+	label={lst:json}
+]
+{
+	"key1": "value1",
+	"key2": 2,
+	"key3": {
+		"key4": null,
+		"key5": {
+			"key5.1": true,
+			"key5.2": false
+		}
+	},
+	"key6": [1, 2, 3, 4, 5]
+}
+\end{lstlisting}
+\end{figure}
+
+\emph{JavaScript Object Notation} (JSON) ist ein weitverbreitetes Format zum Austausch von Daten zwischen verschiedenen Systemen~\cite{JSON}.
+Hierbei werden Daten in dem in \cref{lst:json} gezeigten einfachen Textformat dargestellt, das sowohl von Menschen als auch von Maschinen leicht gelesen und geschrieben werden kann.
+Es ist ein Datenformat, das Schlüssel-Werte-Objekte, Listen, verschachtelte Strukturen, Zahlen und Texte, Wahrheitswerte und null-Werte unterstützt.
+Hierbei wird JSON oft in Kombination mit RESTful APIs verwendet, um Daten zwischen Server und Client auszutauschen.
+
+
+
+\section{Zusammenfassung der Grundlagen}
+In diesem Kapitel wurden verschiedene Grundlagen erläutert, die für die Entwicklung eines universellen Sensor- und Aktuatorsystems für Smart Gardening relevant sind.
+Dabei wurden zunächst Kommunikationsschnittstellen und Protokolle vorgestellt, die es ermöglichen, Daten zwischen verschiedenen Geräten und Systemen auszutauschen.
+Anschließend wurden Hardwareentwicklungskonzepte wie die IP-Schutzart, Breakout Boards, GPIO-Pins und das Qwiic-System erläutert, Mikrocontroller und Boards wie der Raspberry Pi, ESP32 und Arduino vorgestellt und Sensoren und Aktuatoren beschrieben.
+Zuletzt wurden relevante Pythonkonzepte sowie MicroPython, Flask und React für die Webentwicklung und der Datenaustausch mittels JSON erläutert.
+Im nächsten Kapitel wird der Kontext für ein universelles Sensor- und Aktuatorsystem für Smart Gardening analysiert und darauf aufbauend Anforderungen an das System abgeleitet.

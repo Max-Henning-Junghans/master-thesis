@@ -1,0 +1,148 @@
+% !TEX root = ../thesis.tex
+\chapter{Zusammenfassung und Ausblick}\label{ch:zusammenfassung}
+In diesem Kapitel wird die Arbeit zusammengefasst und ein Ausblick auf mögliche Erweiterungen und Verbesserungen gegeben.
+Dafür wird zunächst eine kapitelweise Zusammenfassung gegeben, die die wichtigsten Punkte der Arbeit zusammenfasst.
+Anschließend werden die Limitationen des Prototyps dargestellt, gefolgt von potenziellen Erweiterungen und Verbesserungen des Prototyps.
+Zuletzt wird ein Fazit gezogen, in dem die Arbeit insgesamt bewertet wird.
+
+
+\section{Kapitelweise Zusammenfassung}
+In \cref{ch:grundlagen} wurden unterschiedliche Grundlagen erklärt, die für das Verständnis der Arbeit notwendig sind, solange diese nicht in der Arbeit selbst erklärt wurden oder als bekannt vorausgesetzt werden konnten.
+Dazu gehören Kommunikationsschnittstellen wie die seriellen Schnittstellen I2C, SPI und UART, Industrieprotokolle wie Modbus, CAN-BUS und Profibus, Internetprotokolle wie HTTP, HTTPS und der REST-Architekturstil, Netzwerktypen wie PAN, LAN, HAN, WAN und Funkprotokolle wie WLAN, Bluetooth, Zigbee und LoRaWAN.
+Außerdem wurden für die Hardwareentwicklung notwendige Grundlagen wie die IP-Schutzart, Breakout Boards, GPIO-Pins und das Qwiic-System, Mikrocontroller und Boards sowie Sensorik und Aktuatorik erklärt.
+Zuletzt wurden für die Softwareentwicklung notwendige Grundlagen wie genutzte Python-Konzepte, MicroPython, Flask, React und JSON erläutert.
+
+In \cref{ch:analyse} wurde die Problemstellung im Kontext der Zielgruppe und des Umfelds bestehend aus unterschiedlichen Gartenarten und Gartenelementen analysiert.
+Diese Analyse kam zu dem Ergebnis, dass die Zielgruppe primär aus Hobbygärtnern, sekundär aus professionellen Gärtnern und tertiär aus Landwirten besteht.
+Als Gartenarten wurden die übergreifenden Typen Balkongarten, Gewächshaus, Vorgarten, Kleingarten, Hintergarten, großer Garten als eine Art von Hintergarten und Landschaftsgarten, sowie zusätzlich die Landwirtschaft als eine dem Garten nahe Umgebung betrachtet.
+Dabei weisen die unterschiedlichen Gartenarten sowohl viele Gemeinsamkeiten als auch Unterschiede auf, die sich in den Anforderungen an das System widerspiegeln.
+Als Gartenelemente wurden die übergreifenden Typen Rasen, Beet, Baum, Pflanzentopf, Gewächshaus, Regentonne, Brunnen, Gartenteich, Pool, Gartenhaus, Gehege / Stall, Bienenstock und Kompost betrachtet.
+Diese Gartenelemente weisen ebenfalls viele Gemeinsamkeiten und Unterschiede auf, die sich in den Anforderungen an das System widerspiegeln.
+Basierend auf dieser Analyse wurden funktionale und nicht funktionale Anforderungen an das System definiert.
+Die funktionalen Anforderungen umfassen die Anbindung von Sensoren und Aktuatoren, die Konfiguration des Systems und die Steuerung über komplexe Regeln.
+Zudem muss das System über ein Dashboard überwacht werden können, Benachrichtigungen zum Status geben und autonom arbeiten.
+Die nicht funktionalen Anforderungen beinhalten einen günstigen Preis, Schutz vor Witterung, nutzerfreundliche Bedienung, Datensicherheit, Datenschutz und Angriffssicherheit.
+Außerdem soll das System energieeffizient, jederzeit verfügbar, leicht wartbar und visuell unauffällig sein.
+
+In \cref{ch:stand-der-technik} wurde der Stand der Technik erfasst, um festzustellen, ob die Anforderungen an das System von einem bereits bestehenden System erfüllt werden können.
+Untersucht wurden IoT-Sensoren, Gateways, Messkoffer, Sensor Hubs wie der Universal Wireless Sensor Node, der Loggito Logger, die Middleware Plattform SCAMPI sowie der Smart Garden Hub von GreenIQ, das Industrial Remote Monitoring Verkehrsüberwachungssystem von Journeo und das Industrial Remote Monitoring and Control System Jain Unity von Jain Irrigation.
+Dabei wurde festgestellt, dass keines der Systeme alle funktionalen noch die nicht funktionalen Anforderungen erfüllen kann.
+
+In \cref{ch:konzeption} wurde ein Systemkonzept für ein universelles Sensor- und Aktuatorsystem für Smart Gardening entwickelt, das die definierten Anforderungen erfüllen kann.
+Das Systemkonzept besteht aus einem modularen System mit den Komponenten Nutzerschnittstelle bestehend aus einem Dashboard und einem Konfigurationswerkzeug, einer Benachrichtigungskomponente, einer Datenbank, einem Server für externe Datenquellen und als zentrale Einheit einem Sensor- und Aktuatorkoffer.
+Dieser Sensor- und Aktuatorkoffer besteht selbst aus den Subkomponenten Scheduler, Regelausführer, Netzwerkschnittstelle, Definitionen, Datenbank und Sensor- und Aktuatorschnittstelle.
+Außerdem wurde ein grundsätzliches Definitionsformat für Sensoren, Aktuatoren und Regeln definiert.
+Dieses Konzept beinhaltet keine konkrete Implementierung der Komponenten oder des Definitionsformats, sondern dient als Grundlage, auf die ein Prototyp bauen kann.
+Anschließend wurde eine Teilmenge des Systemkonzepts als zu realisierendes System definiert, das ausreichend ist, um das Konzept zu validieren.
+
+
+In \cref{ch:implementierung} wurde das zu realisierende System in Form eines Prototyps realisiert, um das Konzept zu validieren.
+Hier wurde zunächst evaluiert, welche Hardware für eine Umsetzung des Prototyps geeignet ist, wobei der Raspberry Pi 4 als zentrale Einheit des Sensor- und Aktuatorkoffers ausgewählt wurde.
+Als Beispielsensoren wurden der Lichtsensor TSL2591 und der kombinierte Temperatur-, Luftfeuchtigkeits- und Luftdrucksensor BME280 ausgewählt.
+Anschließend wurden mögliche Programmiersprachen und Frameworks für die verschiedenen Komponenten des Prototyps evaluiert, wobei die Komponenten in die drei übergreifenden Bereiche Sensor- und Aktuatorkoffer, Server und Nutzerschnittstelle unterteilt wurden.
+Für den Sensor- und Aktuatorkoffer wurde Python als Programmiersprache ausgewählt, für den Server ebenfalls Python mit dem Flask Framework und für die Nutzerschnittstelle Javascript mit dem React Framework.
+Anschließend wurde das Definitionsformat für Regeln, Sensoren und externe Datenquellen definiert, wobei das JSON-Format als Grundlage diente.
+Zuletzt wurde die Implementierung der einzelnen Komponenten des Systems im Detail beschrieben, wobei für die Implementierung des Sensor- und Aktuatorkoffers auch die Subkomponenten einzeln beschrieben wurden.
+
+In \cref{ch:evaluation} wurde der Prototyp im Kontext der Anforderungen des Konzepts evaluiert.
+Dafür wurden die funktionalen und nicht funktionalen Anforderungen des Konzepts auf den Prototyp angewendet und bewertet, ob diese erfüllt wurden oder nicht.
+Anschließend wurde für die nicht erfüllten Anforderungen eine Bewertung vorgenommen, ob diese Nichterfüllung auf Fehler im Konzept oder auf Implementierungsentscheidungen zurückzuführen ist.
+Hierbei wurde festgestellt, dass sämtliche Abweichungen von den Anforderungen auf Implementierungsentscheidungen zurückzuführen sind und somit keine Fehler im Konzept festgestellt werden konnten.
+Zuletzt wurde der Prototyp mit den in \cref{ch:stand-der-technik} untersuchten Systemen verglichen und bewertet, ob der Prototyp die Anforderungen besser erfüllt als die untersuchten Systeme.
+Da keines der untersuchten Systeme alle Anforderungen erfüllen konnte, wurde der Vergleich auch auf Fälle ausgeweitet, in denen nicht alle Anforderungen notwendig sind.
+Hier wurde festgestellt, dass der Prototyp auch für viele solcher Anwendungsfälle geeignet ist.
+
+
+
+\section{Limitationen des Prototyps}
+In diesem Abschnitt werden die Limitationen des Prototyps dargestellt.
+Auch wenn der Prototyp erfolgreich umgesetzt wurde, weist der Prototyp Limitationen in der Anbindung von Sensoren und Aktuatoren, der Hardware, der Energieeffizienz, der Netzwerkanbindung, der Sicherheit und der Nutzerfreundlichkeit auf.
+
+Die erste Beschränkung liegt in der Sensor- und Aktuatoranbindung des Prototyps, da nur Sensoren und keine Aktuatoren unterstützt sind.
+Weiterhin wurde die Anbindung auf physische Sensoren beschränkt, die über I2C kommunizieren können.
+Als eine Art virtueller Sensor können HTTP-basierte Schnittstellen, die ein JSON-Format verwenden, angeschlossen werden, andere Netzwerkschnittstellen oder IoT-Sensoren sind nicht implementiert.
+Dies wurde mit den Sensoren BME280 und TSL2591, sowie einer HTTP-basierten Wetterschnittstelle getestet.
+
+Der Prototyp nutzt den Raspberry Pi 4 als zentrale Einheit und ist somit auch auf diese Hardware beschränkt.
+Die erste sich hieraus ergebene Beschränkung ist die Anzahl der GPIO-Pins auf 40, wobei einige davon für spezielle Zwecke reserviert sind, was die Anzahl der verfügbaren Pins weiter reduziert, wodurch die Anzahl der gleichzeitig anschließbaren Geräte begrenzt ist.
+Gleichzeitig stellt der 3,3 Volt Ausgang des Raspberry Pi 4 maximal 500 Milliampere zur Verfügung und der 5 Volt Ausgang nur 1,5 Ampere, was die Möglichkeit zur Anbindung von stromhungrigen Sensoren und Aktuatoren einschränkt, ohne eine externe Stromversorgung zu nutzen.
+
+Aus der Nutzung des Raspberry Pi 4 ergibt sich ein im Vergleich zu Mikrocontrollern höherer Energieverbrauch.
+Da dieser ein vollwertiger Computer ist, sind Energieoptimierungen wie Deep Sleep Modi und ein Batteriebetrieb nicht ohne Weiteres umsetzbar.
+
+Eine weitere Beschränkung, die sich aus der Nutzung des Raspberry Pi 4 ergibt, ist die Netzwerkverbindung.
+Der Prototyp setzt die Netzwerkkommunikation über Ethernet oder WLAN um, womit keine WAN-Schnittstelle implementiert ist.
+Das bedeutet, dass der Prototyp innerhalb eines lokalen Netzwerks betrieben werden muss, damit die Daten an den Server gesendet werden können.
+
+Eine weitere Limitation des Prototyps ist, dass das System keine Sicherheitsmechanismen implementiert.
+Dadurch ist das System anfällig für Angriffe, die die Integrität der Daten gefährden können.
+Dies ist insbesondere bei der Übertragung von Daten über das Internet ein Problem, da diese unverschlüsselt übertragen werden.
+Weiter ist die Benachrichtigung des Nutzers über den Status des Systems nur rudimentär implementiert, sodass eine tatsächliche Überwachung des Systems nur über das Dashboard möglich ist.
+
+Die letzte Limitation des Prototyps ist die Nutzerfreundlichkeit, die in einigen Aspekten wie der Konfiguration und der Bedienung noch verbessert werden kann.
+Die Konfiguration des Systems und die Anbindung von Sensoren sind aktuell sehr technisch und erfordern ein gewisses Maß an Vertrautheit mit der Materie.
+
+Zusammengefasst ergeben sich die Limitationen des Prototyps zum einen aus der Hardware, bei der die Anzahl der GPIO-Pins, die Stromversorgung und der Energieverbrauch limitierend sind.
+Zum anderen ergeben sich Limitationen daraus, dass der Prototyp nur einen begrenzten Umfang im Vergleich zu der Konzeption aufweist und nur einen Machbarkeitsnachweis darstellt.
+Im nächsten Abschnitt werden potenzielle Erweiterungen und Verbesserungen des Prototyps vorgestellt, die die Limitationen des Prototyps adressieren und das System weiterentwickeln können.
+
+
+
+\section{Potenzielle Erweiterungen und Verbesserungen}
+In diesem Abschnitt werden potenzielle Erweiterungen und Verbesserungen des Prototyps vorgestellt, die die Limitationen des Prototyps adressieren und das System weiterentwickeln können, wozu die Migration auf einen Mikrocontroller, die Integration von Aktuatoren, die Implementierung weiterer Schnittstellen, die Implementierung weiterer Datenverbindungen, die Implementierung von Sicherheitsmechanismen, die Implementierung einer nutzerfreundlichen Nutzeroberfläche, die Verbesserung des Dashboards, die Implementierung von Benachrichtigungen und die Implementierung von Fernwartungsfunktionen gehören.
+
+Die erste potenzielle Verbesserung des Prototyps ist die Migration weg von einem Raspberry Pi zu einem Mikrocontroller wie dem ESP32, wodurch der Energieverbrauch des Prototyps reduziert werden kann.
+Das ermöglicht gleichzeitig die Implementierung von Tiefschlafmodi, die den Energieverbrauch weiter reduzieren können.
+Insgesamt kann hierdurch ein sinnvoller Akku- oder Batteriebetrieb ermöglicht werden.
+\pagebreak
+
+Die zweite potenzielle Verbesserung ist die Integration von Aktuatoren, wie sie in der Konzeption vorgesehen sind.
+Dadurch kann der Prototyp nicht nur Daten sammeln, sondern auch auf diese reagieren und erfüllt somit alle funktionalen Anforderungen.
+
+Die nächste mögliche Verbesserung ist die Implementierung weiterer Schnittstellen zusätzlich zu I2C, wie SPI oder UART.
+Somit können weitere Sensoren und Aktuatoren angeschlossen werden, die über diese Schnittstellen kommunizieren.
+
+Die nächste potenzielle Verbesserung ist die Implementierung weiterer Datenverbindungen wie LoRaWAN oder zellulare Verbindungen.
+Dadurch kann der Prototyp auch an Orten betrieben werden, in denen kein WLAN oder Ethernet verfügbar ist.
+Hierbei ist zu beachten, dass die Implementierung von zellularen Verbindungen zusätzliche Kosten verursacht, da eine SIM-Karte benötigt wird.
+Die Integration von LoRaWAN hingegen ermöglicht eine kostengünstige Kommunikation über große Distanzen, wobei hier die Datenrate sehr begrenzt ist.
+
+Die nächste potenzielle Verbesserung ist die Implementierung von Sicherheitsmechanismen, wie die Verschlüsselung der Datenübertragung.
+Dadurch wird die Integrität der Daten gewährleistet und das System ist weniger anfällig für Angriffe.
+
+Die nächste potenzielle Verbesserung ist die Implementierung einer nutzerfreundlichen Nutzeroberfläche, die die Konfiguration und Bedienung des Systems vereinfacht.
+So könnte das Konfigurationswerkzeug durch ein grafisches Werkzeug ersetzt werden, das die Konfiguration über ein Drag-and-drop-System ermöglicht.
+Dadurch wird das System auch für weniger technisch versierte Nutzer zugänglich.
+Dies kann ergänzt werden durch ein Austauschportal für Konfigurationen, wodurch Nutzer diese miteinander teilen können.
+Dadurch können auch technisch weniger versierte Nutzer das System nutzen, da der Anschluss von Sensoren und Aktuatoren zum jetzigen Zeitpunkt ein Verständnis der Schnittstellen sowie der Anforderungen der Sensoren und Aktuatoren erfordert.
+
+Auch das Dashboard kann weiter verbessert werden, indem mehr Informationen wie der Ort des Prototyps, die Anzahl der angeschlossenen Sensoren und Aktuatoren und die Verbindungsinformationen angezeigt werden.
+Dadurch wird das Dashboard informativer und ermöglicht eine bessere Überwachung des Systems.
+Ein weiterer Schritt könnte die Integration von Vorhersagen sein, die auf den gesammelten Daten basieren und dem Nutzer Empfehlungen geben, wie er seinen Garten optimieren kann.
+
+Die nächste potenzielle Verbesserung ist die Implementierung von Benachrichtigungen, die den Nutzer über den Status des Systems informieren.
+Diese sind aktuell rudimentär implementiert und können durch eine Integration von E-Mail oder SMS-Benachrichtigungen verbessert werden.
+
+Eine weitere potenzielle Verbesserung ist die Implementierung von Fernwartungsfunktionen.
+So ist es denkbar, dass der Nutzer das System über das Internet fernsteuern kann, um Sensormessungen zu starten oder Aktuatoren zu steuern.
+Auch die Möglichkeit, das System aus der Ferne zu konfigurieren oder Updates einzuspielen, wäre eine sinnvolle Erweiterung, damit der Nutzer nicht vor Ort sein muss, um das System zu warten.
+
+Weiter würde das System von einem Gehäuse profitieren, das die Elektronik schützt und einer möglichst hohen IP-Schutzklasse entspricht, ohne die Funktionalität des Systems einzuschränken.
+Ein 3D-gedrucktes Gehäuse könnte hierbei eine kostengünstige Lösung sein, die dem Nutzer ermöglicht, das Gehäuse an seine Bedürfnisse anzupassen.
+
+Die letzte und umfassendste potenzielle Verbesserung ist die Erweiterung des Systemkonzepts weg von einem universellen Sensor- und Aktuatorsystem für Smart Gardening hin zu einem universellen Sensor- und Aktuatorsystem für das Internet der Dinge.
+Dadurch kann das System in vielen weiteren Anwendungsfällen eingesetzt werden, wie in der Industrie oder im Hobbybereich.
+Hierfür müsste eine tiefergehende Analyse der erweiterten Anwendungsfälle durchgeführt werden, mit einer anschließenden Anpassung des Systems.
+Zusammengefasst existieren viele Möglichkeiten, den Prototyp weiterzuentwickeln und zu verbessern, um die Limitationen des Prototyps zu adressieren und das System weiterzuentwickeln.
+
+
+\section{Fazit}
+Diese Arbeit hatte als Ziel die Entwicklung eines universellen Sensor- und Aktuatorsystems für Smart Gardening, das die sich aus der Analyse ergebenden Anforderungen erfüllen kann.
+Dafür wurde zunächst eine Analyse der Problemstellung durchgeführt, die in einem Systemkonzept mündete, welches als Grundlage für die Implementierung eines Prototyps diente.
+Der Prototyp wurde implementiert und evaluiert, wobei festgestellt wurde, dass die für den Prototyp definierte Teilmenge des Systemkonzepts erfolgreich umgesetzt wurde.
+Der Prototyp wurde mit bestehenden Systemen verglichen und bewertet, wobei festgestellt wurde, dass der Prototyp die Anforderungen besser erfüllt als die untersuchten Systeme.
+
+Insgesamt kann festgestellt werden, dass das entwickelte Systemkonzept den gestellten Anforderungen entspricht und somit erfolgreich umgesetzt wurde.
+Der Prototyp stellt einen Machbarkeitsnachweis dar, der die Umsetzbarkeit des Systemkonzepts zeigt und als Grundlage für weitere Entwicklungen dienen kann.
+Hierfür können die potenziellen Erweiterungen und Verbesserungen als Ideengrundlage für diese Weiterentwicklung verwendet werden, um das System auch in anderen Anwendungsfällen wie der Industrie einsetzbar zu machen.
+

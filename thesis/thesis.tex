@@ -1,0 +1,175 @@
+\documentclass[
+	ngerman,
+	11pt,
+	twoside,
+	a4paper,
+	headsepline,
+	footsepline, 
+	toc=bib
+]{scrbook}
+% \makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+% \DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+% \DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+% \DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+% \DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+
+
+\input{commands}
+% Eigene Befehle
+\usepackage{rotate}
+\usepackage{pifont}
+\usepackage{eurosym}
+\usepackage{xcolor}
+\let\texteuro\euro
+% Folgender Befehl kommt aus: https://tex.stackexchange.com/a/32687
+\NewDocumentCommand{\rot}{O{45} O{1em} m}{\makebox[#2][l]{\rotatebox{#1}{#3}}}
+\newcommand{\tabellenwinkel}{45}
+\newcommand*\OK{\color{green}\ding{51}}
+\newcommand*\NO{\color{red}\ding{55}}
+\newcommand*\NA{\color{orange}\textbf{/}}
+\newcommand*\UN{\color{orange}\textbf{?}}
+\newcommand{\bluetodo}[1]{\todo[color=\todoblue]{#1}}
+\newcommand{\bluetodoinline}[1]{\todo[color=\todoblue, inline]{#1}}
+\newcommand{\srctodo}[1]{\todo[color=\todosrc]{#1}}
+\newcommand{\todored}{red!40}
+\newcommand{\todosrc}{yellow!40}
+\newcommand{\todoblue}{blue!40}
+\newcommand{\todofeedback}{green!40}
+\newcommand{\abgabedatum}{23. Oktober 2024}
+
+\captionsetup{justification=justified,singlelinecheck=false,format=hang}
+
+% JSON für Listings
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\small, 
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{lightgray!20},
+    literate=
+     *{0}{{{\color{blue}0}}}{1}
+      {1}{{{\color{blue}1}}}{1}
+      {2}{{{\color{blue}2}}}{1}
+      {3}{{{\color{blue}3}}}{1}
+      {4}{{{\color{blue}4}}}{1}
+      {5}{{{\color{blue}5}}}{1}
+      {6}{{{\color{blue}6}}}{1}
+      {7}{{{\color{blue}7}}}{1}
+      {8}{{{\color{blue}8}}}{1}
+      {9}{{{\color{blue}9}}}{1}
+      {:}{{{\color{red}:}}}{1}
+      {,}{{{\color{red},}}}{1}
+      {\{}{{{\color{red}{\{}}}}{1}
+      {\}}{{{\color{red}{\}}}}}{1}
+      {[}{{{\color{red}[}}}{1}
+      {]}{{{\color{red}]}}}{1},
+}
+
+
+%Hier Name des bib files einfügen
+\addbibresource{literature.bib}
+%Ref
+\usepackage[ngerman, noabbrev, nameinlink]{cleveref}
+
+% Nette Hinweise zum LaTexen einer Diss:
+% - http://iacweb.ethz.ch/en/various/Mittelbau/disslatex.html
+% - http://www.zib.de/pfetsch/Diss-Styles/
+% - http://www2.informatik.hu-berlin.de/~nlohmann/arbeit/koma.html
+
+\begin{document}
+\selectlanguage{ngerman} 
+
+\crefname{listing}{Programmcode}{Programmcodes}  
+\Crefname{listing}{Programmcode}{Programmcodes}
+\frontmatter
+
+%---------------------------------------------------------------------------
+% Todos
+%---------------------------------------------------------------------------
+
+% Alle Todos und diese Liste können einfach in der commands.tex deaktiviert
+% werden ~Zeile 171
+%
+\newpage
+%Verhindert Konflikt mit Appendix
+\pagenumbering{Alph}
+\setcounter{page}{1}
+\listoftodos[Todo-Liste]
+\thispagestyle{empty}
+
+%---------------------------------------------------------------------------
+% Frontpage
+%---------------------------------------------------------------------------
+
+	\input{chapters/0-titlepage.tex}
+	\thispagestyle{empty}
+
+%---------------------------------------------------------------------------
+% Inhaltsverzeichnis
+%---------------------------------------------------------------------------
+	\tableofcontents
+	\thispagestyle{empty}
+	\cleardoublepage
+
+%---------------------------------------------------------------------------
+% Der eigentliche Inhalt
+%---------------------------------------------------------------------------
+	\mainmatter
+
+	\include{chapters/1-einleitung}
+	\include{chapters/2-grundlagen}
+	\include{chapters/3-analyse}
+	\include{chapters/4-erhebung}
+	\include{chapters/5-konzept}
+	\include{chapters/6-implementierung}
+	\include{chapters/7-evaluation}
+	\include{chapters/8-zusammenfassung}
+
+
+%---------------------------------------------------------------------------
+% Anhang
+%---------------------------------------------------------------------------
+	\newpage
+	\pagenumbering{roman}
+	\setcounter{page}{1}
+	\appendix
+
+		\cleardoublepage
+		\addcontentsline{toc}{chapter}{\listfigurename}
+		\listoffigures
+
+		\cleardoublepage
+		\addcontentsline{toc}{chapter}{\listtablename}
+	    \listoftables
+
+		\cleardoublepage
+		\addcontentsline{toc}{chapter}{\lstlistlistingname}
+		\lstlistoflistings
+
+		%---------------------------------------------------------------------------
+
+    %using: \abk{Abk.}{Abkürzung}
+		\printnomenclature
+		\emergencystretch 3em%
+		\printbibliography
+
+    \printindex
+
+	% Danksagungen
+
+\chapter*{Danksagungen}
+
+An erster Stelle möchte ich mich bei meinem Betreuer bedanken, der mir immer mit Rat und Tat zur Seite stand und mir ermöglichte, diese Arbeit zu schreiben.
+Weiter möchte ich mich bei meinem Papa, meiner Freundin und meiner Tante bedanken, die die Arbeit Korrektur gelesen und mir somit geholfen haben, ihr den letzten Feinschliff zu verpassen.
+Zuletzt möchte ich meiner Familie und meiner Freundin im Allgemeinen dafür danken, dass sie mich immer unterstützt und mir den Rücken freigehalten haben, um mich auf diese Arbeit konzentrieren zu können.
+
+\thispagestyle{empty}
+
+\end{document}

@@ -1,0 +1,143 @@
+% !TEX root = ../thesis.tex
+%---------------------------------------------------------------------------
+% Frontpage
+%---------------------------------------------------------------------------
+
+% Die Richtline zum Aufbau des Deckblatts von Bachelor- und Masterarbeiten
+% findet sich hier:
+% @see: http://www.uni-luebeck.de/fileadmin/uzl_ssc/PDF-Dateien/Richtlinie-Deckblatt-MINT-Abschlussarbeit-2012-10-18.pdf
+
+\newcommand{\titlepageskip}{\vskip 20pt}
+
+% @see: http://tex.stackexchange.com/questions/31705/different-margins-for-title-page
+\newgeometry{top=1in,bottom=1in,right=1in,left=1.2in}
+\begin{titlepage}
+
+\title{Deutscher Titel der Bachelor-/Masterarbeit}
+\author{Max Henning Junghans}
+
+{\Large
+	% 1. Offizielles Logo des Instituts, an dem die Arbeit angesiedelt ist. (Das offizielle Logo
+	% enthält das Siegel der Universität zusammen mit dem Text "Universität zu Lübeck"
+	% und darunter den Namen des Instituts.) Dieses Logo ist bei den Instituten zu
+	% bekommen. Das Logo muss oben links platziert werden.
+	\includegraphics[width=80mm]{Logo_Inst_Telematik_cropped}
+	\vskip 44pt
+
+	% 2. Optional: Noch einmal Name des Instituts und Angabe der Direktorin oder des
+	% Direktors des Instituts.
+
+	% 3. Titel der Arbeit in deutscher Sprache und ebenfalls in englischer Sprache. Dabei soll
+	% die Sprache, in der die Arbeit verfasst wurde, als erste angeführt werden; die andere
+	% Sprache kann weniger prominent dargestellt werden.
+	% Auch bei englischsprachigen Studiengängen sollen die Titelblätter auf Deutsch sein.
+	\textbf{\LARGE Konzeption und Entwicklung eines universellen Sensor- und Aktuatorsystems für Smart Gardening}\\
+	\LARGE Design and Development of a Universal Sensor and Actuator System for Smart Gardening
+
+	\titlepageskip
+	% 4. Der Text "Bachelorarbeit" oder "Masterarbeit" (nicht "Bachelor-Arbeit" oder "Master-Arbeit").
+	%\textbf{Bachelorarbeit}
+	\textbf{Masterarbeit}
+
+	\titlepageskip
+	%5. Der Text "im Rahmen des Studiengangs"
+	im Rahmen des Studiengangs\\
+	%6. Der ausgeschriebene Name des Studiengangs (also beispielsweise "Informatik"
+	%oder "Molecular Life Science", hingegen nicht "Bioinformatik" oder "MLS")
+	\textbf{Informatik}\\
+	%7. Der Text "der Universität zu Lübeck"
+	der Universität zu Lübeck
+
+	\titlepageskip
+	%8. Der Text "Vorgelegt von" und der Name des Studenten
+	vorgelegt von\\
+	\textbf{Max Henning Junghans}
+
+	\titlepageskip
+	%9. Der Text "Ausgegeben und betreut von"
+	ausgegeben und betreut von\\
+	%10. Der Name des ersten Prüfers. Dies ist immer gleichzeitig
+	%die Betreuerin oder der Betreuer im Sinne der Prüfungsordnung.
+	\textbf{Dr.~rer.~nat.~Florian-Lennert~Lau}
+
+	\vfill
+	%13. Der Text "Lübeck, den" und das Abgabedatum.
+	{
+		Lübeck, den \abgabedatum
+	}
+
+	% Diesen Teil entfernen, wenn "Im Focus das Leben" nicht drauf stehen soll
+	%14. Optional der Text "Im Focus das Leben".
+	{
+		\titlepageskip
+		Im Focus das Leben
+	}
+}
+\end{titlepage}
+\restoregeometry
+
+\cleardoublepage
+
+% Erklärung
+\newpage
+\chapter*{Erklärung}
+
+Ich versichere an Eides statt, die vorliegende Arbeit selbstständig und nur unter Benutzung
+der angegebenen Hilfsmittel angefertigt zu haben.
+
+\vspace*{3cm}
+Lübeck, den \abgabedatum
+
+\thispagestyle{empty}
+\cleardoublepage
+
+
+% Abstract und Kurzfassung
+
+
+\section*{\huge Abstract}
+Gardening is the most popular hobby among Germans, although not all tasks are enjoyable or carried out optimally, and there is therefore great potential for the use of smart gardening.
+Demographic change and urbanisation also mean that fewer and fewer people have the time, opportunity, or ability to tend a garden.
+
+The aim of this project is to develop a universal sensor and actor system for smart gardening that enables users to analyse, automate and optimise their garden according to their needs.
+By collecting and analysing data, well-founded decisions can be made that can both increase yield and minimise resource consumption.
+Many gardening tasks are repetitive, unexciting, and strenuous, which makes the possibility of automation particularly attractive.
+Ultimately, gardening work can be optimised by automating tasks based on the data collected.
+The target group is mainly amateur gardeners, which is why the system must be affordable and easy to use.
+
+To fulfil these requirements, a concept for a modular and universal sensor and actuator system for smart gardening is being developed.
+The system consists of a sensor and actuator case that can work autonomously and enables the universal connection of sensors and actuators as long as the corresponding interface for communication is implemented in the case.
+Sensors and actuators can be created using a flexible definition format and controlled using self-definable rules.
+In addition, a server is designed to provide extended functions such as notifications, the storage of sensor data and the integration of other data sources such as APIs.
+A dashboard enables the user to visualise the collected data clearly.
+This concept empowers the user to customise the system to their individual needs in the garden.
+
+Furthermore, this concept is implemented as a prototype based on a Raspberry Pi and tested with a light sensor as well as a temperature, humidity, and air pressure sensor.
+Weather data is also integrated into the system, simple notifications are realised, and the definition format is implemented in JSON.
+Finally, a web application is being developed that includes the dashboard and enables the system to be configured.
+
+\cleardoublepage
+
+
+\section*{\huge Kurzfassung}
+Gartenarbeit ist das beliebteste Hobby der Deutschen, wobei nicht alle Aufgaben Freude bereiten oder optimal ausgeführt werden und somit großes Potenzial für den Einsatz von Smart Gardening besteht.
+Auch der demografische Wandel und die Urbanisierung führen dazu, dass immer weniger Menschen Zeit, die Möglichkeit oder die Fähigkeit haben, einen Garten zu pflegen.
+
+Ziel dieser Arbeit ist es, ein universelles Sensor- und Aktuatorsystem für Smart Gardening zu entwickeln, das es dem Nutzer ermöglicht, den Garten nach eigenen Bedürfnissen zu analysieren, zu automatisieren und zu optimieren.
+Durch die Sammlung und Analyse von Daten können fundierte Entscheidungen getroffen werden, die sowohl den Ertrag steigern, als auch den Ressourcenverbrauch minimieren können.
+Viele Arbeiten im Garten sind repetitiv, wenig spannend und anstrengend, was die Möglichkeit zur Automatisierung besonders attraktiv macht.
+Schlussendlich kann durch die Automatisierung von Arbeiten basierend auf den gesammelten Daten die Gartenarbeit optimiert werden.
+Zielgruppe sind hauptsächlich Hobbygärtner, weshalb das System erschwinglich und einfach zu bedienen sein muss.
+
+Um diesen Anforderungen gerecht zu werden, wird ein Konzept für ein modulares und universelles Sensor- und Aktuatorsystem für Smart Gardening konzipiert.
+Das System besteht aus einem Sensor- und Aktuatorkoffer, der autark arbeiten kann und den universellen Anschluss von Sensoren und Aktuatoren ermöglicht, solange die entsprechende Schnittstelle für die Kommunikation im Koffer implementiert ist.
+Über ein flexibles Definitionsformat können Sensoren und Aktuatoren angelegt und mithilfe von selbst definierbaren Regeln gesteuert werden.
+Zusätzlich wird ein Server konzipiert, der erweiterte Funktionen wie Benachrichtigungen, die Speicherung von Sensordaten sowie die Integration weiterer Datenquellen wie APIs bereitstellt.
+Ein Dashboard ermöglicht es dem Nutzer, die gesammelten Daten übersichtlich zu visualisieren.
+Dieses Konzept ermächtigt den Nutzer, das System an seine individuellen Bedürfnisse im Garten anzupassen.
+
+Weiterhin wird dieses Konzept als Prototyp umgesetzt, der auf einem Raspberry Pi basiert und mit einem Lichtsensor sowie einem Temperatur-, Luftfeuchtigkeit- und Luftdrucksensor getestet wurde.
+Außerdem werden Wetterdaten in das System integriert, einfache Benachrichtigungen realisiert und das Definitionsformat in JSON umgesetzt.
+Zuletzt wird eine Webanwendung entwickelt, die das Dashboard beinhaltet und die Konfiguration des Systems ermöglicht.
+
+\cleardoublepage

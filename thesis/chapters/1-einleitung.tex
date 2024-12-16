@@ -1,0 +1,213 @@
+% !TEX root = ../thesis.tex
+\chapter{Einleitung}\label{ch:einleitung}
+In diesem Kapitel wird in das Thema der Arbeit eingeleitet, indem zunächst die Intuition und Motivation für die Arbeit erläutert wird.
+Anschließend werden die genaue Probleme herausgearbeitet und basierend darauf eine Zielsetzung für diese Arbeit definiert.
+Es werden verschiedene Lösungsansätze vorgestellt, die zur Erreichung des Ziels beitragen können, und der vielversprechendste Lösungsansatz ausgewählt.
+Danach werden die Beiträge der Arbeit zum Stand der Technik vorgestellt, wobei diese auf dem vielversprechendsten Lösungsansatz basieren.
+Abschließend wird der Aufbau der Arbeit vorgestellt, wobei die einzelnen Kapitel kurz eingeführt und die Zusammenhänge zwischen den Kapiteln erläutert werden.
+
+
+
+\section{Intuition und Motivation}
+In diesem Abschnitt wird die Intuition und Motivation für diese Arbeit erläutert.
+Die fortschreitende Digitalisierung verändert nicht nur industrielle und städtische Umgebungen, sondern hat zunehmend auch Auswirkungen auf den Alltag von Privatpersonen.
+Mit dem Aufkommen des \emph{Internets der Dinge} (IoT) und der zunehmenden Automatisierung lassen sich zahlreiche Lebensbereiche optimieren und vereinfachen.
+Ein Bereich, der bisher oft übersehen wurde, ist die Gartenarbeit, insbesondere die von Hobbygärtnern.
+Dabei kann die Automatisierung von Gartenarbeit nicht nur Zeit und Arbeit sparen, sondern auch die Qualität der Pflanzen verbessern und die Umwelt schonen.
+Hierbei macht der demografische Wandel, der zu einer alternden Bevölkerung führt, den Einsatz von Technologie in der Gartenarbeit immer wichtiger.
+Ältere Menschen haben oft nicht mehr die körperliche Kraft, um schwere Gartenarbeit zu verrichten, und können von automatisierten Systemen profitieren und so länger selbstständig bleiben.
+Gleichzeitig führt die Urbanisierung in Kombination mit dem Klimawandel zu einem höheren Bedarf an Begrünung in den Städten, um ein angenehmes Stadtklima zu schaffen.
+Hierbei kann Smart Gardening helfen, die Pflege von Grünanlagen zu vereinfachen und somit die Lebensqualität in den Städten zu erhöhen.
+
+Für die Digitalisierung und Automatisierung der Gartenarbeit existiert der Begriff \emph{Smart Gardening}.
+Auch wenn es keine allgemeingültige Definition gibt, so kann Smart Gardening doch als Einsatz von Sensorik und/oder Aktuatorik im Garten umrissen werden~\cite{SmartGardeningAi}, wobei die drei Ziele Analyse, Automatisierung und Optimierung verfolgt werden können.
+
+\pagebreak
+
+Das erste Ziel ist die Analyse des Gartens mithilfe des Einsatzes von Sensorik.
+So können etwa Temperatursensoren, Luft- und Bodenfeuchtigkeitssensoren und Pegelmessgeräte als Sensorik zum Einsatz kommen, um die entsprechenden Parameter zu überwachen.
+Mit Temperatursensoren können Frostwarnungen gegeben werden, mit Bodenfeuchtigkeitssensoren kann die Trockenheit von Blumenerde gemessen und mit Pegelmessgeräten kann der Wasserstand in einem Teich überwacht werden.
+Der Nutzer kann dann auf Basis dieser Daten Entscheidungen treffen, wie das Gießen der Pflanzen oder das Schützen der Pflanzen vor Frost.
+
+Das zweite Ziel ist die Automatisierung von manuellen Prozessen mittels des Einsatzes von Aktuatorik.
+Als Aktuatorik können etwa Mähroboter und automatische Rasensprenger eingesetzt werden.
+Der Mähroboter mäht automatisch den Rasen und entlastet den Nutzer von der Aufgabe, den Rasen selbst mit einem Rasenmäher mähen zu müssen.
+Durch diese Automatisierung ist das Rasenmähen keine Last mehr für den Nutzer und kann somit auch regelmäßiger durchgeführt werden, was wiederum die Qualität des Rasens verbessert.
+Der automatische Rasensprenger bewässert den Rasen automatisch und sorgt somit dafür, dass der Rasen immer ausreichend bewässert ist.
+Dadurch wird eine gleichmäßige Bewässerung des Rasens gewährleistet und gleichzeitig ein Austrocknen des Rasens verhindert.
+Beide Automatisierungsbeispiele können dabei sowohl manuell, Beispielsweise durch eine App, drücken eines Buttons oder Öffnen eines Ventils, als auch zeitbasiert ausgelöst werden.
+
+Aus der Kombination von Sensorik und Aktuatorik soll der Garten für den Nutzer optimiert werden.
+Dabei bezieht sich die Optimierung auf das Erreichen von Zielen des Nutzers wie einen höheren Ertrag, weniger Kosten, eine schönere Optik des Gartens, eine geringere Arbeitsbelastung oder eine bessere Umweltverträglichkeit.
+
+So kann unter anderem der Rasensprenger genau dann aktiviert werden, wenn die Bodenfeuchtigkeit unter einen bestimmten Wert fällt.
+Hierbei ist der Bodenfeuchtigkeitssensor die Sensorik und der Rasensprenger die Aktuatorik.
+Das spart Kosten durch effizienteren Wasserverbrauch, schont gleichzeitig die Umwelt und erspart dem Nutzer das manuelle Ein- und Ausschalten des Rasensprengers.
+
+Als weiteres Beispiel kann in einem Gewächshaus die Temperatur auf Basis von Temperaturmessungen automatisch durch das Öffnen und Schließen von Fenstern reguliert werden.
+Hierbei ist der Temperatursensor die Sensorik und der Fensteröffner die Aktuatorik.
+Hierdurch kann der Ertrag gesteigert werden, da die Pflanzen in einem optimalen Klima wachsen.
+
+Ein drittes Beispiel ist die automatische Erkennung von Schädlingen und automatische Schädlingsbekämpfung etwa durch Ultraschall.
+Hierbei ist die Schädlingsdetektion die Sensorik und die Schädlingsbekämpfung die Aktuatorik.
+Durch die automatische Bekämpfung von Schädlingen können Schäden an den Pflanzen vermieden und somit der Ertrag gesteigert sowie die Schönheit der Pflanzen erhalten werden.
+Viele weitere Beispiele sind denkbar.
+Der Nutzer muss sich also außerhalb von Fehlerfällen keine Gedanken mehr um die von Smart Gardening übernommenen Aufgaben machen.
+
+Gartenarbeit ist das beliebteste Hobby in Deutschland~\cite{GartenHobby}, trotzdem ist der Fortschritt von Smart Gardening hier gering.
+Immer mehr, hauptsächlich jüngere Gartenbesitzer, interessieren sich zwar für Smart Gardening~\cite{SmartGardeningBeliebt} und die Verbreitung von Smart Gardening steigt, in absoluten Zahlen ist die Verbreitung jedoch weiterhin niedrig~\cite{SmartGardeningBeliebt}.
+Dies steht im Gegensatz zur Landwirtschaft, wo der Wettbewerb den Technologieeinsatz vorantreibt~\cite{IoTFarming}.
+
+Die Motivation für diese Arbeit ist die Überbrückung zwischen traditioneller Gärtnerei und moderner Technologie.
+Es besteht ein wachsender Bedarf, die Potenziale der Technologie für den Gartenbau zu erschließen~\cite{SmartGardeningBeliebt}, was hauptsächlich für Hobbygärtner bisher nur schwer möglich ist.
+Hobbygärtner stehen nicht die gleichen finanziellen Ressourcen zur Verfügung, auf die Unternehmen zurückgreifen können, und gleichzeitig verkaufen viele Hersteller exklusiv an Unternehmen.
+Durch die Untersuchung möglicher Anwendungsfälle wird der praktische Nutzen dieser Technologie verdeutlicht.
+
+Zusammengefasst besteht die Intuition und Motivation dieser Arbeit darin, ein System zu entwickeln, das die Möglichkeiten von Smart Gardening einem breiteren Publikum zugänglich macht, insbesondere Hobbygärtnern.
+
+
+
+\section{Problem und Zielsetzung}
+In diesem Abschnitt werden zunächst die grundlegende Probleme herausgearbeitet, die es zu lösen gilt.
+Anschließend wird ein Ziel für diese Arbeit formuliert, das auf die Lösung dieser Probleme abzielt.
+
+Gartenarbeit kann nicht nur eine anstrengende, sondern auch eine zeitintensive und teilweise komplexe Tätigkeit sein, die eine dauerhafte Aufmerksamkeit erfordert.
+Smart Gardening Technologien bieten in diesem Zusammenhang großes Potenzial, indem sie die Pflege eines Gartens durch den Einsatz moderner Technologien erleichtern.
+Dazu gehören Sensoren zur Analyse und Überwachung, Aktuatoren zur Automatisierung von Prozessen und die intelligente Kombination aus beiden, um eine Optimierung der Gartenarbeit zu ermöglichen.
+Ein wichtiger Aspekt eines Smart Gardening Systems sollte dabei sein, dass der Nutzer individuell entscheiden kann, wie viel Kontrolle er über den Garten behalten und welche Aufgaben er an das System abgeben möchte.
+
+Trotz dieser technischen Möglichkeiten gibt es jedoch immer noch Herausforderungen, die den breiten Einsatz von Smart Gardening Technologien einschränken.
+Die vorhandenen Systeme auf dem Markt sind häufig verhältnismäßig teuer, was sie für viele Gartenbesitzer unattraktiv macht.
+Außerdem fehlt es an universellen und modularen Lösungen, die sich durch den Nutzer an die eigenen Gartenanforderungen anpassen lassen, da diese meistens auf spezifische Anwendungsfälle zugeschnitten sind.
+
+\pagebreak
+
+Aus den oben genannten Problemen und Herausforderungen ergibt sich das zentrale Ziel dieser Arbeit, ein Smart Gardening System zu entwickeln, das sowohl nutzerfreundlich als auch flexibel und kosteneffizient ist.
+Dieses System soll auf die Bedürfnisse der Zielgruppe zugeschnitten sein und den spezifischen Anforderungen des Einsatzgebiets Garten gerecht werden.
+Zusammengefasst besteht das Ziel dieser Arbeit darin, ein Smart Gardening System zu entwickeln, das universell einsetzbar ist und die Anforderungen der Zielgruppe erfüllt.
+Lösungsansätze für dieses Ziel werden im nächsten Abschnitt vorgestellt.
+
+
+
+\section{Lösungsansätze}
+In diesem Abschnitt wird basierend auf dem vorher definierten Ziel eine Reihe von Lösungsansätzen vorgestellt, die zur Erreichung des Ziels beitragen können.
+Dabei werden die Vor- und Nachteile der einzelnen Lösungsansätze aufgelistet und der beste Lösungsansatz ausgewählt.
+Als Lösungsansätze werden die Erweiterung eines bestehenden Systems, die Entwicklung eines neuen Systems und die Entwicklung einer Cloudplattform vorgestellt.
+
+Um das vorher definierte Ziel zu erreichen, sind unterschiedliche Lösungsansätze denkbar.
+Ein erster möglicher Ansatz besteht darin, auf einem bestehenden Smart Gardening System aufzubauen und es so zu erweitern, dass es universelle Anforderungen erfüllt.
+Viele bestehende Lösungen bieten bereits Grundfunktionen wie die automatische Bewässerung oder die Überwachung von Bodenfeuchtigkeit und Temperatur.
+Diese Systeme könnten durch zusätzliche Module erweitert werden, die neue Funktionalitäten bieten.
+So könnten Module für die Integration von Wetterdaten, die Anbindung an externe Datenquellen oder die Erweiterung um zusätzliche Sensoren und Aktuatoren entwickelt werden.
+Ein weiterer Vorteil dieses Ansatzes wäre, dass Nutzer, die bereits in ein bestehendes System investiert haben, dieses durch die neuen Module aufwerten können, ohne ein komplett neues System anschaffen zu müssen.
+
+Ein zweiter Ansatz besteht in der Entwicklung eines neuen Systems, das universell Sensoren und Aktuatoren unterstützt.
+Hierbei könnte das System standardisierte Schnittstellen implementieren und somit die Integration von entsprechenden Sensoren und Aktuatoren ermöglichen, welche nicht Teil des Grundsystems sind.
+Eine skalierbare Architektur würde es dem Nutzer ermöglichen, das System bei Bedarf zu erweitern, beispielsweise durch das Hinzufügen weiterer Sensoren zur Überwachung zusätzlicher Umweltwerte oder durch die Integration von Aktuatoren zur Steuerung neuer Geräte.
+Diese Flexibilität ist insbesondere für Nutzer attraktiv, die sich ändernde Anforderungen haben.
+Zudem würde die modulare Struktur des Systems dazu beitragen, die Kosten niedrig zu halten, da nur die jeweils benötigten Komponenten gekauft werden müssen.
+Außerdem könnte ein Regelsystem implementiert werden, das es dem Nutzer ermöglicht, individuelle Regeln zu definieren, die auf bestimmte Bedingungen reagieren und die Aktuatoren entsprechend zu steuern.
+Damit könnte der Nutzer das System an seine Bedürfnisse anpassen und die Automatisierung seines Gartens optimieren.
+
+Ein dritter Ansatz ist die Entwicklung einer Cloudplattform, die es ermöglicht, beliebige IoT-Geräte in das System zu integrieren und zu steuern.
+Eine solche Plattform könnte als Knotenpunkt dienen, der Daten von verschiedenen Sensoren sammelt, analysiert und verwertbare Informationen umwandelt.
+Nutzer könnten Regeln definieren, die auf der Plattform gespeichert sind und durch IoT-Sensoren mit Daten versorgt werden.
+Diese Regeln könnten so gestaltet sein, dass sie auf bestimmte Bedingungen reagieren, wie eine zu niedrige Bodenfeuchtigkeit, Temperatur oder auf Wettervorhersagen.
+Die Cloudplattform könnte auch zusätzliche Dienste bereitstellen, etwa maschinelle Lernalgorithmen zur Vorhersage, wann bewässert werden muss oder die Analyse historischer Daten zur Optimierung des Gartens.
+Durch die zentrale Verwaltung und Steuerung aller Geräte über eine nutzerfreundliche Plattform könnten auch technikfremde Nutzer das System verwenden.
+
+Als vielversprechendste Lösungsansatz für die Herausforderungen im Bereich des Smart Gardening erweist sich die Entwicklung eines neuen Systems, das universell Sensoren und Aktuatoren unterstützt.
+Während der Aufbau auf bestehenden Systemen zwar eine günstige Möglichkeit bietet, vorhandene Technologie zu erweitern, sind diese Lösungen oft in ihren Grundstrukturen festgelegt.
+Sie bieten nur begrenzte Erweiterungsmöglichkeiten und sind häufig auf spezifische Anwendungsfälle beschränkt.
+Ein von Grund auf neu entwickeltes System ermöglicht, von Anfang an alle relevanten Anforderungen zu erfüllen, insbesondere die Möglichkeit, universell eingesetzt zu werden.
+Auch der dritte Ansatz, eine Cloudplattform zu entwickeln, bietet zwar einige interessante Möglichkeiten zur zentralisierten Steuerung und Datenanalyse, bringt jedoch zusätzliche Komplexität und die Notwendigkeit für eine stabile Internetverbindung aller Geräte.
+Das neue, universelle System kann unabhängig davon arbeiten und bleibt dennoch offen für Erweiterungen durch Cloudintegration, die die Möglichkeiten des Systems erweitern.
+
+Zusammengefasst gibt es verschiedene mögliche Lösungsansätze, um das Ziel dieser Arbeit zu erreichen.
+Der vielversprechendste Ansatz ist die Entwicklung eines neuen Systems, das universell Sensoren und Aktuatoren unterstützt und eine modulare Architektur bietet, die es dem Nutzer ermöglicht, das System an seine Bedürfnisse anzupassen, einem universellen Sensor- und Aktuatorsystem für Smart Gardening.
+Eine Cloudplattform bietet zwar einige interessante Möglichkeiten, bringt jedoch zusätzliche Komplexität und Abhängigkeiten mit sich, die den Einsatz des Systems erschweren können.
+Der Ansatz, auf einem bestehenden System aufzubauen, bietet zwar eine kostengünstige Möglichkeit, vorhandene Technologie zu erweitern, ist jedoch oft in seinen Grundstrukturen festgelegt und bietet nur begrenzte Erweiterungsmöglichkeiten.
+Im nächsten Abschnitt werden die Beiträge dieser Arbeit vorgestellt, die auf dem vielversprechendsten Lösungsansatz basieren.
+
+
+
+\section{Beiträge dieser Arbeit}
+In diesem Abschnitt werden die Beiträge dieser Arbeit zum Stand der Technik.
+Dazu gehört die Analyse der Problemstellung mit dem Ziel, die Anforderungen an ein universelles Sensor- und Aktuatorsystem für Smart Gardening zu definieren.
+Weiterhin gehört die Entwicklung eines Systemkonzepts dazu, das die Anforderungen umsetzt.
+Zuletzt gehört die Implementierung eines Prototyps dazu, der das Systemkonzept validiert.
+
+% Diesen Abschnitt kann ich wahrscheinlich noch etwas ausführlicher machen.
+Diese Arbeit arbeitet ein universelles Sensor- und Aktuatorsystem für Smart Gardening heraus und hinterlässt damit mehrere Beiträge.
+Dies beginnt mit einer tiefgehenden Analyse der Problemstellung, mit dem Ziel, die Anforderungen an ein solches Sensor- und Aktuatorsystem zu definieren.
+Diese Analyse beinhaltet eine Betrachtung der Zielgruppe, verschiedener Gartenarten und verschiedener Gartenelemente.
+Hierbei werden zwar nicht alle Gartenarten und Gartenelemente untersucht, diese stellen jedoch eine gute Basis dar, um die Anforderungen an ein universelles System zu definieren.
+Dabei werden sowohl funktionale als auch nicht funktionale Anforderungen definiert, die das System erfüllen muss.
+Zunächst können diese Anforderungen als Basis für Arbeiten dienen, die sich mit der Umsetzung dieser Anforderungen beschäftigen, aber ein anderes Systemkonzept verfolgen.
+Setzen unterschiedliche Systeme die gleichen Anforderungen um, so können diese Systeme miteinander verglichen werden, um zu evaluieren, welches System besser geeignet ist.
+
+Spätere Arbeiten können außerdem auf dieser Analyse aufbauen, um weitergehende Systeme, die mehr Anforderungen erfüllen oder spezifischere Systeme für spezifischere Zielgruppen, Gartenarten oder Gartenelemente zu entwickeln.
+Beispielsweise könnten spezielle Systeme für Landwirte entwickelt werden, da sie Anforderungen haben, die Hobbygärtner nicht benötigen.
+Auch für Gewächshäuser könnten Systeme entwickelt werden, da diese andere Anforderungen haben als gewöhnliche Gartenarten.
+Weiter sind Adaptionen für andere Anwendungsfälle denkbar, die nah mit der Gärtnerei verwandt sind wie die Imkerei.
+
+Als Nächstes trägt diese Arbeit zur Analyse des Standes der Technik bei, indem sie bestehende Systeme analysiert, die potenziell in der Lage sein könnten, die im vorherigen Abschnitt definierten Anforderungen an das System zu erfüllen.
+Diese Analyse zeigt, dass kein bestehendes System alle Anforderungen erfüllen kann und somit eine Neuentwicklung notwendig ist.
+
+Der nächste und gleichzeitig wichtigste Beitrag dieser Arbeit ist die Entwicklung eines Systemkonzepts für ein universelles Sensor- und Aktuatorsystem für Smart Gardening.
+Dieses Systemkonzept definiert modulare Komponenten, die die Funktionalitäten des Systems strukturieren und eine einfache Weiterentwicklung einzelner Komponenten des Systems ermöglichen.
+Das Systemkonzept definiert auch, wie die Komponenten miteinander kommunizieren und wie die Sensorik und Aktuatorik an das System angeschlossen werden.
+Ein weiterer wichtiger Teil des Konzepts ist die Definition eines Definitionsformats für anzuschließende Sensoren und Aktuatoren sowie die Definition von Regeln, die das System steuern.
+Dies sorgt für eine einfache Anbindung neuer Sensoren und Aktuatoren sowie die einfache Steuerung des Systems durch den Nutzer.
+Das Systemkonzept kann als Basis für die Entwicklung eines Sensor- und Aktuatorsystems für Smart Gardening dienen und als Grundlage für spätere Arbeiten, die dieses Systemkonzept erweitern wollen.
+
+Der letzte Beitrag dieser Arbeit ist die Implementierung eines Prototyps für ein universelles Sensor- und Aktuatorsystem für Smart Gardening, welcher eine Teilmenge der Funktionalitäten des Systemkonzepts umsetzt, um das Konzept zu validieren.
+Dabei werden alle Komponenten des Konzepts mindestens rudimentär implementiert, damit tatsächlich vom Prototyp auf das Konzept geschlossen werden kann.
+Außerdem wird das Definitionsformat aus dem Systemkonzept umgesetzt. % TODO weiter schreiben
+
+Zusammengefasst trägt diese Arbeit zur Analyse eines Sensor- und Aktuatorsystems für Smart Gardening bei, indem sie die Anforderungen an ein solches System definiert.
+Weiterhin trägt die Arbeit zur Entwicklung eines Systemkonzepts für ein solches System bei, indem sie modulare Komponenten definiert, die zusammen ein universelles System bilden.
+Der letzte Beitrag dieser Arbeit ist die Implementierung eines Prototyps, der das Systemkonzept validiert und als Basis für spätere Arbeiten dienen kann.
+
+
+
+\section{Aufbau dieser Arbeit}
+In diesem Abschnitt wird der Aufbau dieser Arbeit vorgestellt und die einzelnen Kapitel kurz eingeführt.
+Für diese Einführung wird kurz beschrieben, welchen Fokus die einzelnen Kapitel haben und wie sie inhaltlich aufeinander aufbauen.
+
+In \cref{ch:grundlagen} werden die Grundlagen für diese Arbeit erläutert, die nicht vorausgesetzt werden können und für das Verständnis der Arbeit notwendig sind und nicht anderswo in der Arbeit erklärt werden.
+Hierbei werden vor allem die verwendeten Technologien und Konzepte erläutert, die in die Kategorien Schnittstellen, Hardwareentwicklung und Softwareentwicklung fallen.
+Zu den Schnittstellen zählen die Kommunikationsprotokolle, die für die Kommunikation zwischen den Komponenten des Systems verwendet werden, und die Schnittstellen, die für die Anbindung der Sensoren und Aktuatoren an das System verwendet werden.
+Die Hardwareentwicklung umfasst die relevanten Bauteile wie Boards und Mikrocontroller und beinhaltet auch die Antwort auf die Frage, was genau mit Sensorik und Aktuatorik gemeint ist.
+Die Softwareentwicklung umfasst die Programmierkonzepte und Frameworks, die für die Implementierung des Systems verwendet werden.
+
+In \cref{ch:analyse} wird die Problemstellung analysiert und die Anforderungen an das System definiert.
+Hierbei wird zunächst die Zielgruppe genauer betrachtet sowie auch das Umfeld, welches primär aus verschiedenen Gartenarten besteht, die unterschiedliche Gartenelemente enthalten und somit unterschiedliche Anforderungen an das System stellen.
+Für die Analyse der Zielgruppe werden Hobbygärtner, professionelle Gärtner und Landwirte betrachtet.
+Als Gartenarten werden die Arten Balkongarten, Gewächshaus, Vorgarten, Kleingarten, Hintergarten, großer Garten als eine Art von Hintergarten und Landschaftsgarten betrachtet.
+Als Gartenelemente werden die Elemente Rasen, Beet, Baum, Pflanzentopf, Gewächshaus, Regentonne, Brunnen, Gartenteich, Pool, Gartenhaus, Gehege / Stall, Bienenstock und Kompost betrachtet.
+Die Anforderungen an das System werden aus den Anforderungen der Zielgruppe, der Gartenarten und der Gartenelemente abgeleitet und in funktionale und nicht funktionale Anforderungen unterteilt.
+
+In \cref{ch:stand-der-technik} werden bestehende Systeme analysiert, die potenziell in der Lage sein könnten, die im vorherigen Kapitel gestellten Anforderungen an das System zu erfüllen, um zu evaluieren, ob eine Neuentwicklung notwendig ist.
+Hierfür werden zunächst IoT-Sensoren und Gateways als Klassen von Systemen betrachtet.
+Anschließend werden handbetriebene Messkoffer für den Gartenbau betrachtet.
+Darauf folgen Sensor-Hubs wie der Universal Wireless Sensor Node, der Loggito Logger, die Middleware SCAMPI und der Smart Garden Hub von GreenIQ.
+Abschließend werden das Industrial Remote Monitoring (and Control) System für Verkehrsüberwachung von Journeo und das Jain Unity System von Jain Irrigation betrachtet.
+Diese unterschiedlichen Systeme werden schlussendlich miteinander auf Basis der im vorherigen Kapitel definierten Anforderungen verglichen.
+
+In \cref{ch:konzeption} wird ein Systemkonzept für das universelle Sensor- und Aktuatorsystem für Smart Gardening auf Basis der in \cref{ch:analyse} definierten Anforderungen entwickelt.
+Dieses Systemkonzept definiert unterschiedliche Komponenten, um die Funktionalitäten des Systems zu strukturieren und eine modulare Entwicklung zu ermöglichen.
+Auf Basis dieser Komponenten wird ein zu realisierendes System definiert, das eine Teilmenge der Funktionalitäten des Systemkonzepts umsetzt und gleichzeitig eine mindestens rudimentäre Implementierung aller Komponenten fordert.
+
+In \cref{ch:implementierung} wird das zu realisierende System aus dem vorherigen Kapitel als Prototyp implementiert.
+Dabei wird zunächst evaluiert, welche Hardware für die Implementierung des Prototyps verwendet werden soll.
+Danach werden die softwareseitigen Aspekte der Implementierung betrachtet, was Datenformate, Schnittstellen und die Implementierung der einzelnen Komponenten des Systems inklusive verwendeter Programmiersprachen und Frameworks umfasst.
+
+In \cref{ch:evaluation} wird die Implementierung des Prototyps im Vergleich zu dem zu realisierenden System sowie den Anforderungen aus \cref{ch:analyse} und den im \cref{ch:stand-der-technik} analysierten Systemen evaluiert.
+Dafür wird zunächst evaluiert, welche funktionalen und nicht funktionalen Anforderungen der Prototyp erfüllt und welche nicht.
+Anschließend wird für die nicht erfüllten Anforderungen evaluiert, ob dies auf Fehler im Konzept oder auf Implementierungsentscheidungen zurückzuführen ist.
+Abschließend wird evaluiert, wie der Prototyp im Vergleich zu den im \cref{ch:stand-der-technik} analysierten Systemen abschneidet.
+
+In \cref{ch:zusammenfassung} werden die Ergebnisse der Arbeit zunächst kapitelweise zusammengefasst.
+Anschließend werden Limitationen und mögliche Erweiterungen und Verbesserungen des Prototyps und des Konzepts diskutiert.
+Zuletzt wird ein Fazit gezogen und ein Ausblick auf mögliche zukünftige Arbeiten gegeben.

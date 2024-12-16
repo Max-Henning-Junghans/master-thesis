@@ -1,0 +1,377 @@
+% !TEX root = ../thesis.tex
+\chapter{Evaluation}\label{ch:evaluation}
+In diesem Kapitel wird zunächst der entwickelte Prototyp im Hinblick auf die gestellten Anforderungen evaluiert.
+Dabei wird für jede Anforderung evaluiert, ob diese durch den Prototyp erfüllt wurde oder nicht und gegebenenfalls, warum dies der Fall ist.
+Anschließend wird der Prototyp mit weiteren Lösungsansätzen anhand der Metriken Preis, Energieeffizienz und Skalierbarkeit verglichen.
+
+
+
+\section{Evaluation des Prototyps im Hinblick auf die gestellten Anforderungen}
+In diesem Abschnitt wird der entwickelte Prototyp im Hinblick auf die gestellten Anforderungen evaluiert.
+Dafür wird zunächst für die funktionalen und nicht funktionalen Anforderungen evaluiert, ob diese durch den Prototyp erfüllt werden oder nicht.
+Anschließend wird bewertet, ob die Abweichungen von den Anforderungen auf das Konzept zurückzuführen sind oder nicht.
+
+
+\subsection{Erfüllung der funktionalen Anforderungen}
+In diesem Abschnitt wird erläutert, welche funktionalen Anforderungen durch den Prototyp erfüllt wurden und welche nicht.
+Die funktionalen Anforderungen sind die Möglichkeit zur Messung, Konfiguration, Regeldefinition, Darstellung der Messdaten in einem Dashboard, Steuerung von Aktuatoren, autonomen Betrieb des Systems und Benachrichtigung des Nutzers.
+Dafür wird für jede funktionale Anforderung zunächst kurz beschrieben, was diese bedeutet und wie sie im Prototyp umgesetzt wurde.
+Anschließend wird bewertet, ob die Anforderung erfüllt ist oder nicht und gegebenenfalls, warum dies der Fall ist.
+
+Die erste funktionale Anforderung ist die Messung von Umweltdaten, wofür Sensoren universell unterstützt werden sollen.
+Der Prototyp unterstützt beispielhaft alle Sensoren, die eine I2C-Schnittstelle aufweisen, wobei exemplarisch ein Lichtsensor TSL2591 und ein Temperatur-, Feuchtigkeits- und Drucksensor BME280 verwendet wurden.
+Die Sensoren werden über die I2C-Schnittstelle an den Raspberry Pi angeschlossen und über die Konfiguration des Systems eingebunden.
+In der Konfiguration wird die I2C-Adresse des Sensors sowie eine Liste von Aktionen eingetragen, wobei als Aktionen Lesen, Schreiben und Schlafen möglich sind.
+Eine Schreib-Aktion beinhaltet eine Liste von Steuerbefehlen, die an den Sensor gesendet werden, um diesen beispielsweise zu konfigurieren oder eine Messung zu starten.
+Diese Steuerbefehle enthalten im Normalfall die Adresse des Registers des Sensors, das beschrieben werden soll, sowie den Wert, der in das Register geschrieben werden soll.
+Auch Lese-Aktionen enthalten diese Steuerbefehle, wobei hier meist das zu lesende Register angegeben wird.
+Außerdem enthält die Lese-Aktion die Anzahl der Bytes, die gelesen werden sollen, sowie die Reihenfolge der Bytes.
+Die Schlaf-Aktion ist eine Wartezeit, die der Sensor- und Aktuatorkoffer zwischen zwei Aktionen wartet, da der Sensor beispielsweise bei Messungen eine gewisse Zeit benötigt, bevor er das Ergebnis bereitstellt.
+Da das I2C-Protokoll nur Lesen und Schreiben unterstützt, bildet das System mit der Unterstützung von Wartezeiten alle Möglichkeiten der Interaktion mit I2C-Sensoren ab und ist somit universell einsetzbar.
+Neben I2C-Sensoren werden im Prototyp auch externe Datenquellen in Form von HTTP-APIs unterstützt, wenn diese eine JSON-Antwort liefern.
+Hierfür wird durch die Angabe einer Liste von Schlüsseln und einer Auswertungsfunktion gewährleistet, dass die Antwort navigiert und ausgewertet werden kann.
+Somit ist diese Anforderung erfüllt.
+
+Die zweite funktionale Anforderung ist die Möglichkeit, das System als Nutzer selbst konfigurieren zu können.
+Der Raspberry Pi verfügt über verschiedene GPIO-Pins, die unterschiedlich verwendet werden können und frei liegen.
+Dadurch ist es dem Nutzer möglich, selbst Sensoren und bei einer Erweiterung auch Aktuatoren anzuschließen.
+Um diese vollständig in das System zu integrieren, müssen sie in der Konfiguration des Systems eingetragen werden, was im vorherigen Absatz bereits beschrieben wurde.
+Dort wurde auch beschrieben, dass nicht nur physische Sensoren, sondern auch externe Datenquellen in das System integriert werden können.
+Ein weiterer Aspekt von Konfigurierbarkeit ist Skalierbarkeit, also die Möglichkeit, das System um weitere Sensoren und Aktuatoren zu erweitern und das System großflächig einzusetzen.
+Hierbei kann das System auf zwei Arten skaliert werden, zum einen durch die Anzahl der Sensoren und Aktuatoren, die an den Sensor- und Aktuatorkoffer angeschlossen werden, und zum anderen durch die Anzahl der Sensor- und Aktuatorkoffer, die an den Server angeschlossen werden.
+Die erste Art der Skalierung ist durch die Anzahl der Pins des Raspberry Pi begrenzt, kombiniert mit den Grenzen der integrierten Protokolle.
+Der für den Prototyp verwendete Raspberry 4 Modell B verfügt über 40 GPIO-Pins, wobei einige Protokolle mehrere Pins benötigen, wie I2C, das zwei Pins benötigt.
+Als Bus Protokoll unterstützt I2C mehrere Geräte, wodurch die Anzahl der angeschlossenen Geräte aufgrund der 7 Bit Adressierung und einiger reservierter Adressen auf maximal 112 Geräte begrenzt ist, wobei physische Limitierungen wie die Kabellänge und Spannungsprobleme die Anzahl der Geräte (Sensoren und Aktuatoren) weiter einschränken.
+Gleichzeitig können nur wenige Geräte über den Raspberry Pi selbst mit Strom versorgt werden, weshalb bei mehreren Geräten oder Geräten mit hohem Stromverbrauch eine externe Stromversorgung für diese notwendig wird.
+Die zweite Art der Skalierung ist durch die Kapazität des Servers begrenzt, Anfragen zu beantworten.
+In einem Test auf den Messdatenendpunkt des Servers wurden 1000 Anfragen, die jeweils eine Messung enthielten, in 17,6 s verarbeitet.
+Dabei wurden die Anfragen von einem Raspberry Pi im gleichen LAN gesendet, was einem realistischen Einsatz des Systems entspricht.
+Das entspricht etwa 56,8 Anfragen pro Sekunde, was bedeutet, dass mehr als 50 Sensor- und Aktuatorkoffer, die jede Sekunde eine Messung senden, den Server nicht überlasten würden.
+Beide Arten der Skalierbarkeit sind für realistische Anwendungsfälle ausreichend, womit die Konfigurierbarkeit des Systems gegeben ist.
+
+Die dritte funktionale Anforderung ist die Möglichkeit, komplexe Regeln zu definieren.
+Der Prototyp ermöglicht dies über ein Definitionsformat, das in einer JSON-Datei abgelegt wird.
+In dieser Definition werden die Sensoren, Regeln und externen Datenquellen definiert, wobei ein Platzhalter für die Aktuatoren vorgesehen ist.
+Die Definition der Sensoren, Aktuatoren und externen Datenquellen ist notwendig, um diese in den Regeln verwenden zu können.
+Die Definition von Sensoren und externen Datenquellen wurde bereits bei der Messung angerissen, weshalb hier nur die Definition von Regeln betrachtet wird.
+Eine Regel besteht aus einer Liste von Aktionen und Bedingungen, wobei es als Aktion Messungen, Benachrichtigungen und Senden der Messdaten implementiert ist.
+Eine Bedingung besteht aus einem Vergleich von zwei Werten, wobei die Werte Messungen oder Konstanten sein können.
+Als Vergleichsoperatoren sind \emph{Gleichheit}, \emph{Größer}, \emph{Kleiner}, \emph{Größer oder gleich} und \emph{Kleiner oder gleich} implementiert.
+Hierbei können die Sensoren und Aktuatoren des Systems eingebunden werden, wodurch die Regeln auf die Messdaten reagieren können.
+Im Dann oder Sonst Fall einer Regel wird wiederum eine Liste von Aktionen ausgeführt, wodurch die Regeln beliebig komplex gestaltet werden können.
+Durch diese Regeldefinitionsmöglichkeit des Systems ist diese Anforderung erfüllt.
+
+Die vierte funktionale Anforderung ist die Darstellung der Messdaten in einem Dashboard.
+Hierfür ist im Prototyp eine Webseite implementiert, die über einen Browser aufgerufen wird und die Daten der Sensoren in Diagrammen darstellt.
+Diese Diagramme stellen den Zeitverlauf der Messdaten dar, wobei auf der x-Achse die Zeit und auf der y-Achse die Messwerte dargestellt werden.
+Dementsprechend ist die Anforderung erfüllt.
+
+Die fünfte funktionale Anforderung ist die Steuerung von Aktuatoren.
+Diese Anforderung wurde im Prototyp nicht umgesetzt, weshalb sie nicht erfüllt ist.
+
+Die sechste funktionale Anforderung ist der autonome Betrieb des Systems.
+Diese Anforderung wurde im Prototyp nicht umgesetzt, weshalb sie nicht erfüllt ist.
+
+Die letzte funktionale Anforderung ist die Benachrichtigung des Nutzers.
+Der Prototyp implementiert eine rudimentäre Benachrichtigungsfunktion, die als einzigen Benachrichtigungskanal das Terminal des Servers unterstützt.
+Da keine weiteren Benachrichtigungskanäle oder der Herzschlag implementiert sind, ist diese Anforderung nur teilweise erfüllt.
+
+\begin{table}[!htbp]
+	\centering
+	\caption[Erfüllung der funktionalen Anforderungen durch den Prototyp.]{
+		Übersicht über die Erfüllung der funktionalen Anforderungen durch den Prototyp.
+		Zusätzlich sind die von dem Konzept und dem zu realisierenden System erfüllten Anforderungen aufgelistet.
+		Die jeweils erfüllten funktionalen Anforderungen sind mit einem Häkchen markiert.
+		In einigen Fällen ist eine Anforderung nur teilweise erfüllt, in diesen Fällen ist ein Fragezeichen markiert.
+		Nicht erfüllte Anforderungen werden durch ein Kreuz markiert.
+	}\label{tab:prototyp-f-anforderungen}
+	\begin{tabular}{llll}
+		Anforderung			& Konzept	& zu realisierendes System	& Prototyp \\\hline
+		Messung				& \OK		& \OK						& \OK \\
+		Konfiguration		& \OK		& \OK						& \OK \\
+		Regeldefinition		& \OK		& \OK						& \OK \\
+		Dashboard			& \OK		& \OK						& \OK \\
+		Steuerung			& \OK		& \NO						& \NO \\
+		Autonomer Betrieb	& \OK		& \NO						& \NO \\
+		Benachrichtigung	& \OK		& \UN						& \UN
+	\end{tabular}
+\end{table}
+
+Zusammengefasst ist die Erfüllung der funktionalen Anforderungen durch den Prototyp in \cref{tab:prototyp-f-anforderungen} dargestellt.
+Dabei sind die Anforderungen Messung, Konfiguration, Regeldefinition und Dashboard erfüllt, während die Anforderungen Steuerung und autonomer Betrieb nicht erfüllt sind und die Benachrichtigung nur teilweise erfüllt ist.
+Dem sind die Anforderungen des zu realisierenden Systems gegenübergestellt, wodurch ersichtlich wird, dass der Prototyp die vorher gesteckten Ziele für die funktionalen Anforderungen erreicht hat.
+
+
+
+\subsection{Erfüllung der nicht funktionalen Anforderungen}
+In diesem Abschnitt wird erläutert, welche der nicht funktionalen Anforderungen durch den Prototyp erfüllt wurden und welche nicht.
+Die nicht funktionalen Anforderungen sind der Preis, der Schutz vor den Elementen, die Nutzerfreundlichkeit der Bedienung, die Sicherheit, der sparsame Energieverbrauch, die Verfügbarkeit des Systems, die einfache Wartbarkeit und die visuelle Unauffälligkeit.
+Dafür wird für jede nicht funktionale Anforderung zunächst kurz beschrieben, was diese bedeutet und wie sie im Prototyp umgesetzt wurde.
+Anschließend wird bewertet, ob die Anforderung erfüllt ist oder nicht und gegebenenfalls, warum dies der Fall ist.
+
+\begin{table}[!htbp]
+	\centering
+	\caption[Preise aller genutzten Komponenten für den Prototyp.]{
+		Tabelle der Preise aller genutzten Komponenten für den Prototyp.\footnotemark
+		Außerdem ist der Preis für den Prototyp ohne Sensoren und Sensorzubehör aufgelistet, da diese optional sind.
+	}\label{tab:prototyp-preis}
+	\begin{tabular}{lr}
+		Bauteil & Preis \\\hline
+		Raspberry Pi 4 Modell B mit 4 GB RAM					&  58,99 € \\
+		Raspberry Pi Netzteil									&   7,79 € \\
+		32 GB microSD Speicherkarte								&   5,75 € \\
+		Lichtsensor - TSL2591									&   8,80 € \\
+		Temperatur-, Feuchtigkeits- und Drucksensor - BME280	&  18,60 € \\
+		Qwiic SHIM Header										&   1,30 € \\
+		2 * 50 mm Qwiic											&   2,30 € \\\hline
+		Summe ohne Sensoren und Sensorzubehör					&  72,53 € \\
+		Gesamtsumme												& 103,53 € \\
+	\end{tabular}
+\end{table}
+
+\footnotetext{Preise von \href{https://www.rasppishop.de/}{Rasppishop}, \href{https://www.berrybase.de}{BerryBase} und \href{https://www.reichelt.de/}{reichelt}, Stand 2024-09-22, inklusive Umsatzsteuer, zuzüglich Versandkosten}
+
+Die wichtigste nicht funktionale Anforderung des Systems ist der Preis, da das System für den Einsatz von Hobbygärtnern konzipiert ist.
+Der entwickelte Prototyp besteht aus einem Raspberry Pi 4 Modell B mit 4 GB RAM, einem Netzteil, einer SD-Karte, zwei Sensoren, einem Qwiic Shim Header und zwei Qwiic Kabeln.
+Die Preise der Bauteile sind in \cref{tab:prototyp-preis} aufgelistet und ergeben eine Gesamtsumme von 103,53~€, oder 72,53~€ ohne Sensoren und Sensorzubehör.
+Primärer Kostenfaktor ist der Raspberry Pi, der mehr als die Hälfte der Gesamtkosten ausmacht, weshalb bei Verwendung eines Mikrocontrollers wie dem ESP32, welcher ab 6,80 € erhältlich ist\footnote{Preis von \href{https://www.berrybase.de}{BerryBase}, Stand 2024-09-22, inklusive Umsatzsteuer, zuzüglich Versandkosten}, die Kosten deutlich reduziert werden können.
+Nicht einbezogen sind die Kosten für den Server, der die Daten speichert und die Webseite mit der Konfiguration und dem Dashboard bereitstellt sowie laufenden Kosten für den Betrieb des Systems.
+Außerdem sind die Kosten nicht berücksichtigt, die für eine Erfüllung der bisher nicht erfüllten Anforderungen notwendig wären.
+Insgesamt befinden sich die Kosten im niedrigen dreistelligen Bereich, was aufgrund einer hohen Ausgabebereitschaft von Hobbygärtnern ein akzeptabler Preis ist~\cite{AusgabebereitschaftGarten}
+
+Die zweite nicht funktionale Anforderung ist der Schutz vor den Elementen, da das System im Außenbereich eingesetzt wird.
+Der Prototyp weist keinerlei Gehäuse auf, weshalb er nicht vor den Elementen geschützt ist und daher nicht im Außenbereich eingesetzt werden kann.
+
+Die dritte nicht funktionale Anforderung ist die Nutzerfreundlichkeit der Bedienung, da das System von Hobbygärtnern bedient wird.
+Zur Nutzung des Systems müssen zunächst der Server, die Webseite und die Steuerung des Sensor- und Aktuatorkoffers auf dem Raspberry Pi gestartet werden, wofür ein rudimentäres Verständnis von Kommandozeilenbefehlen notwendig ist.
+Die Nutzerschnittstelle des Prototyps besteht aus einer Webseite, die über einen Browser aufgerufen wird, auf der über ein Dashboard die Daten dargestellt und über ein Konfigurationswerkzeug das System konfiguriert werden kann.
+Hierbei ist die Bedienung des Dashboards intuitiv, da es als Interaktionsmöglichkeit lediglich einen Button gibt, der die aktuellen Daten des Systems abruft.
+Ansonsten stellt das Dashboard die Daten für die verschiedenen Sensoren in Diagrammen dar, die die Werte über die Zeit anzeigen.
+Somit ist die Bedienung des Dashboards für Hobbygärtner einfach und intuitiv.
+Die Konfiguration des Systems ist jedoch nicht intuitiv, da die Konfiguration über eine JSON-Datei erfolgt, die manuell bearbeitet werden muss.
+Hierbei ist ein rudimentäres Verständnis von JSON-Dateien notwendig, um die Konfiguration durchzuführen.
+Eine besondere Herausforderung stellt die Einbindung von Sensoren dar, da in der Konfiguration Steuerbefehle eingetragen werden müssen, mit denen die Sensoren angesprochen werden.
+Diese Steuerbefehle sind normalerweise in der Dokumentation des Sensors zu finden, diese Dokumentation ist jedoch nicht immer einfach verständlich.
+Somit ist die Konfiguration des Systems für Hobbygärtner nicht intuitiv, weshalb diese Anforderung nur teilweise erfüllt ist.
+
+Die vierte nicht funktionale Anforderung ist die Sicherheit, worunter der Datenschutz, die Datenintegrität und die Angriffssicherheit fallen.
+Diese Anforderung bezieht sich primär auf den Datenverkehr zwischen den Komponenten des Systems, da ansonsten ein physischer Zugriff auf das System notwendig ist.
+Der Datenverkehr läuft über die REST-Schnittstelle des Servers, die das HTTP-Protokoll nutzt und dementsprechend unverschlüsselt ist.
+Daher sind weder der Datenschutz noch die Datenintegrität gewährleistet, da die Daten von Dritten abgefangen und manipuliert werden können.
+Gleichzeitig ist die Angriffssicherheit gewährleistet, da für den Prototyp keine Aktuatorik implementiert ist, die von Dritten manipuliert werden könnte.
+Somit ist die Anforderung nur teilweise erfüllt.
+
+Die fünfte nicht funktionale Anforderung ist der sparsame Energieverbrauch, da das System auch im Batteriebetrieb betrieben werden können soll.
+Ein Raspberry Pi 4 Modell B verbraucht im Betrieb zwischen 2,7 Watt im Leerlauf und 6,5 Watt unter Last~\cite{RaspberryPi4Power}.
+Dabei sind die Sensoren vernachlässigbar, so verbraucht der Lichtsensor TSL2591 im Betrieb 0,001 Watt~\cite{TSL2591}.
+Bei einem Strompreis von 0,25 € pro Kilowattstunde ergeben sich Kosten von 5,90 € bis 14,20 € pro Jahr.
+Wird das System beispielsweise mit einem 20 Ah Akku mit einer Nennspannung von 3,7 Volt betrieben, so ergibt sich eine Laufzeit zwischen 27,4 Stunden und 11,4 Stunden, abhängig von der Auslastung des Systems.
+Somit ist diese Anforderung nicht erfüllt.
+
+Die sechste nicht funktionale Anforderung ist die Verfügbarkeit des Systems, welche meint, dass das System jederzeit verfügbar sein oder im Fehlerfall den Nutzer informieren soll.
+Um sicherzustellen, dass der Nutzer informiert wird, ist in der Konzeption ein Herzschlag vorgesehen, dessen Ausfall eine Benachrichtigung an den Nutzer auslöst.
+Da dieser Herzschlag für den Prototyp nicht umgesetzt wurde, ist diese Anforderung für den Prototyp nicht erfüllt.
+
+Die siebte nicht funktionale Anforderung ist die einfache Wartbarkeit, da das System von Hobbygärtnern gewartet werden soll.
+Der Prototyp besteht aus wenigen Komponenten, die mittels Steckverbindungen verbunden sind, weshalb die Komponenten im Fehlerfall von Hobbygärtnern selbst getauscht werden können.
+Daher ist diese Anforderung erfüllt.
+
+Die letzte nicht funktionale Anforderung ist die visuelle Unauffälligkeit, damit das System im Garten nicht stört.
+Der Prototyp besteht aus wenigen Komponenten, die ohne Akku oder Ladekabel etwa eine Fläche von $80$ $cm^2$ einnehmen, weshalb das System selbst bei einer Integration eines Gehäuses mit Akku nur einen geringen Platzbedarf hat.
+Somit ist diese Anforderung erfüllt.
+
+
+\begin{table}[!htbp]
+	\centering
+	\caption[Erfüllung der nicht funktionalen Anforderungen durch den Prototyp.]{
+		Übersicht über die Erfüllung der nicht funktionalen Anforderungen durch den Prototyp.
+		Zusätzlich sind die von dem zu realisierenden System erfüllten Anforderungen aufgelistet.
+		Die jeweils erfüllten nicht funktionalen Anforderungen sind mit einem Häkchen markiert.
+		In einigen Fällen ist eine Anforderung nur teilweise erfüllt, in diesen Fällen ist ein Fragezeichen markiert.
+		Nicht erfüllte Anforderungen werden durch ein Kreuz markiert.
+	}\label{tab:prototyp-nf-anforderungen}
+	\begin{tabular}{lll}
+		Anforderung			& zu realisierendes System	& Prototyp \\\hline
+		Preis				& \OK						& \OK \\
+		Elementschutz		& \NO						& \NO \\
+		Nutzerfreundlichkeit& \NO						& \UN \\
+		Sicherheit			& \NO						& \UN \\
+		Energieverbrauch	& \NO						& \NO \\
+		Verfügbarkeit		& \NO						& \NO \\
+		Wartbarkeit			& \NO						& \OK \\
+		Unauffälligkeit		& \NO						& \OK 
+	\end{tabular}
+\end{table}
+
+Zusammengefasst ist die Erfüllung der nicht funktionalen Anforderungen durch den Prototyp in \cref{tab:prototyp-nf-anforderungen} dargestellt.
+Dabei sind die Anforderungen Preis, Wartbarkeit und Unauffälligkeit erfüllt, während die Anforderungen Elementschutz, Energieverbrauch und Verfügbarkeit nicht und die Anforderungen Nutzerfreundlichkeit und Sicherheit nur teilweise erfüllt sind.
+Dem sind die Anforderungen des zu realisierenden Systems gegenübergestellt, wodurch ersichtlich wird, dass der Prototyp die vorher gesteckten Ziele für die nicht funktionalen Anforderungen übertroffen hat.
+
+\subsection{Bewertung von Abweichungen}
+In diesem Abschnitt wird bewertet, ob die Abweichungen von den Anforderungen auf das Konzept zurückzuführen sind oder nicht.
+Es werden die Abweichungen für die Anforderungen Steuerung, autonomer Betrieb, Benachrichtigung, Elementschutz, Nutzerfreundlichkeit, Sicherheit, Energieverbrauch und Verfügbarkeit bewertet.
+Dafür wird für jede nicht erfüllte Anforderung kurz erläutert, warum diese nicht erfüllt ist und analysiert, ob die Abweichung von der Anforderung nur auf den Prototyp zurückzuführen ist oder auch auf das Konzept.
+
+Im \cref{ch:konzeption} wurde ein Konzept entwickelt, welches alle im \cref{ch:analyse} definierten Anforderungen erfüllen kann.
+Der Prototyp verzichtet bewusst auf die Umsetzung aller Anforderungen, da er als Minimalprodukt konzipiert ist, welches die Machbarkeit des Konzepts demonstrieren soll.
+Daher sind die Abweichungen zwischen den gestellten Anforderungen und den tatsächlich umgesetzten Funktionen auf die begrenzte Entwicklungszeit und den Umfang des Prototyps zurückzuführen.
+Sie bieten jedoch wertvolle Anknüpfungspunkte für zukünftige Entwicklungen.
+
+Ob diese Abweichungen von den Anforderungen weiterhin einen Rückschluss auf die Qualität des Konzepts zulassen, wird im Folgenden evaluiert.
+Die erste Abweichung ist die fehlende Steuerung von Aktuatoren, welche insbesondere für Automatisierungen im Garten notwendig ist.
+Für die Aktuatoren sind im Definitionsformat und im Prototyp bereits Platzhalter vorgesehen, weshalb die Erweiterung um Aktuatoren möglich ist.
+Gleichzeitig ist die Steuerung von Aktuatoren ähnlich zu der Steuerung von Sensoren, wie an der umgesetzten I2C-Schnittstelle zu erkennen ist.
+Für die Steuerung der I2C-Sensoren werden Steuerbefehle gesendet, wobei hier sowohl Lesebefehle als auch Schreibbefehle möglich sind.
+Eine Steuerung von Aktuatoren benötigt ebenfalls Schreibbefehle, Lesebefehle sind jedoch nicht notwendig.
+Somit ist die grundsätzliche Funktionalität für die Steuerung von Aktuatoren bereits im Prototyp vorhanden, weshalb die Abweichung von der Anforderung nicht auf das Konzept zurückzuführen ist.
+
+Die nächste Abweichung ist der fehlende autonome Betrieb des Prototyps, welcher dadurch begründet ist, dass das System ohne eine externe Stromquelle nicht betrieben werden kann.
+Es ist weder ein Akku noch ein Solarpanel im Prototyp verbaut, gleichzeitig ist der Energieverbrauch des Raspberry Pi so hoch, dass ein Akku-Betrieb entweder ein häufiges Nachladen oder eine hohe Kapazität erfordern würde.
+Dieser Umstand ist jedoch nicht auf das Konzept zurückzuführen, da die Nutzung eines Raspberry Pis eine Implementierungsentscheidung auf Basis von vorhandener Hardware ist.
+Eine Umsetzung mit einem Mikrocontroller wie dem ESP32 würde den Energieverbrauch deutlich reduzieren und somit den autonomen Betrieb ermöglichen.
+
+Die letzte Abweichung von den funktionalen Anforderungen ist die nur teilweise Erfüllung der Benachrichtigung des Nutzers.
+Die Benachrichtigung des Nutzers ist im Prototyp nur über das Terminal des Servers möglich, weshalb der Nutzer aktiv den Server überwachen muss.
+Eine Benachrichtigung über das Terminal ist jedoch nur eine rudimentäre Implementierung, die zur Erfüllung der Anforderung nicht ausreicht.
+Eine Erweiterung um weitere Benachrichtigungskanäle wie E-Mail oder SMS ist jedoch einfach möglich, da es hierfür bereits Bibliotheken in Python gibt~\cite{PythonEmail, PythonSMTP, PythonSMS}.
+Weiterhin fehlt die Implementierung eines Herzschlags, der bei Ausfall des Systems eine Benachrichtigung auslöst.
+Die Implementierung eines Herzschlags ist jedoch ebenfalls einfach möglich, da hierfür nur ein regelmäßiges Senden eines Signals an den Server notwendig ist.
+Somit ist die Abweichung von der Anforderung nicht auf das Konzept zurückzuführen.
+
+Die erste nicht erfüllte nicht funktionale Anforderung ist der Schutz vor den Elementen.
+Diese Anforderung ist unabhängig von einem abstrakten Systemkonzept und kann nur durch die Verwendung eines Gehäuses oder einer Schutzvorrichtung erfüllt werden.
+Das Konzept trifft keine Aussage über die physische Ausgestaltung des Systems, weshalb die Abweichung von der Anforderung nicht auf das Konzept zurückzuführen ist.
+
+Die nächste nicht funktionale Anforderung Nutzerfreundlichkeit der Bedienung ist nur teilweise erfüllt, da die Konfiguration des Systems über eine JSON-Datei erfolgt.
+Zur Erhöhung der Nutzerfreundlichkeit ist ein Konfigurationstool vorstellbar, welches eine Konfiguration des Systems mit einem Drag-and-drop-Werkzeug ermöglicht.
+Dadurch sind dem Nutzer die unterschiedlichen Optionen klar und es müssen nur noch die notwendigen Informationen eingetragen werden.
+Dies behebt jedoch nicht das Problem, dass die genauen Steuerbefehle für die Sensoren manuell eingetragen werden müssen.
+Daher kann durch die Bereitstellung von Definitionen für bestimmte Sensoren, Aktuatoren und externe Datenquellen durch andere Nutzer die Konfiguration des Systems auch für diesen Aspekt vereinfacht werden.
+Eine solche Implementierung stellt nur eine Ausgestaltung des Konfigurationswerkzeugs dar und ist somit mit dem Konzept vereinbar.
+
+Auch die Sicherheit ist nur teilweise erfüllt, da der Datenverkehr unverschlüsselt ist.
+Wird die REST-Schnittstelle des Servers durch eine HTTPS-Schnittstelle ersetzt, so ist die Sicherheit des Systems erhöht.
+Durch die Verwendung von HTTPS wird der Datenverkehr verschlüsselt, wodurch der Datenschutz und die Datenintegrität gewährleistet sind.
+Für den Prototyp ist die Angriffssicherheit erfüllt, da keine Aktuatoren implementiert sind, die von Dritten manipuliert werden könnten.
+Da diese im Konzept aber vorgesehen sind, erlaubt die Erfüllung der Angriffssicherheit keinen Rückschluss auf die Erfüllung dieser Anforderung im Konzept.
+Wird die Möglichkeit zur Konfiguration des Systems so implementiert, dass diese nur bei einem physischen Zugriff auf das System möglich ist und wird zusätzlich eine Verschlüsselung des Datenverkehrs implementiert, so ist die Angriffssicherheit gewährleistet.
+Insgesamt ist anzumerken, dass eine absolute Sicherheit nicht garantiert werden kann, da auch für verschlüsselte Datenverbindungen wie HTTPS Angriffe möglich sind~\cite{HTTPSAttack}.
+Weitere Angriffsvektoren sind auch bei einem physischen Zugriff auf das System möglich, weshalb die Bezeichnung, dass die Unteranforderungen gewährleistet sind, insgesamt nur unter dem Vorbehalt einer relativen Sicherheit erfüllt ist.
+
+Die nächste nicht erfüllte nicht funktionale Anforderung ist der sparsame Energieverbrauch.
+Wie schon zuvor beschrieben ist der Energieverbrauch des Raspberry Pi im Betrieb zu hoch, um das System im Batteriebetrieb betreiben zu können.
+Durch die Verwendung eines Mikrocontrollers wie dem ESP32 kann der Energieverbrauch deutlich reduziert werden, da hier zum einen der Grundverbrauch des Mikrocontrollers geringer ist und zum anderen der Mikrocontroller in den Schlafmodus versetzt werden kann.
+Da das System zwischen der Ausführung von Regeln nur einen regelmäßigen Herzschlag ausführt, kann der Mikrocontroller die meiste Zeit in diesem Schlafmodus verbringen, wodurch der Energieverbrauch deutlich reduziert wird.
+Dementsprechend ist die Abweichung von der Anforderung nicht auf das Konzept zurückzuführen.
+
+Die letzte nicht erfüllte nicht funktionale Anforderung ist die Verfügbarkeit des Systems.
+Hierfür ist ein Herzschlag vorgesehen, der bei Ausfall des Systems eine Benachrichtigung an den Nutzer auslöst.
+Dieser Herzschlag ist im Prototyp nicht implementiert, da er aber im Konzept vorgesehen ist, ist die Abweichung von der Anforderung nicht auf das Konzept zurückzuführen.
+
+Zusammengefasst sind die Abweichungen des Prototyps von den Anforderungen Steuerung, autonomer Betrieb, Benachrichtigung, Elementschutz, Nutzerfreundlichkeit, Sicherheit, Energieverbrauch und Verfügbarkeit nicht auf das Konzept zurückzuführen.
+Die Abweichungen sind auf die begrenzte Entwicklungszeit und den Umfang des Prototyps zurückzuführen und bieten wertvolle Ansätze für zukünftige Weiterentwicklungen.
+Da keine der Abweichungen auf das Konzept zurückzuführen sind, wird die Qualität des Konzepts durch die Evaluation des Prototyps bestätigt.
+
+\subsection{Zusammenfassung der Evaluation des Prototyps im Hinblick auf die gestellten Anforderungen}
+Zusammengefasst erfüllt der Prototyp die funktionalen Anforderungen Messung, Konfiguration, Regeldefinition und Dashboard, während die Anforderungen Steuerung und autonomer Betrieb nicht und die Anforderung Benachrichtigung nur teilweise erfüllt ist.
+Weiterhin erfüllt der Prototyp die nicht funktionalen Anforderungen Preis, Wartbarkeit und Unauffälligkeit, während die Anforderungen Elementschutz, Energieverbrauch und Verfügbarkeit nicht und die Anforderungen Nutzerfreundlichkeit und Sicherheit nur teilweise erfüllt sind.
+Die Abweichungen von den Anforderungen sind auf die begrenzte Entwicklungszeit und den Umfang des Prototyps zurückzuführen und bieten wertvolle Ansätze für zukünftige Weiterentwicklungen.
+Keine der Abweichungen sind auf das Konzept zurückzuführen, weshalb die Qualität des Konzepts durch die Evaluation des Prototyps bestätigt wird.
+
+
+\section{Vergleich mit anderen Lösungsansätzen}
+In diesem Abschnitt wird der Prototyp mit anderen Lösungsansätzen verglichen, die in \cref{ch:stand-der-technik} beschrieben wurden.
+Dieser Vergleich erfolgt anhand der Metriken Preis des Systems, Energieeffizienz und Skalierbarkeit, welche für den Prototyp bereits im vorherigen Abschnitt evaluiert wurden.
+
+Das erste betrachtete System sind IoT-Sensoren, welche autonom Umgebungsdaten messen und an eine Cloud senden und die meisten aufgestellten Anforderungen nicht erfüllen.
+Trotzdem können sie einen Teil der Anwendungsfälle abdecken, da sie die Messung von Umgebungsdaten ermöglichen.
+Dementsprechend ist ein Vergleich einiger Metriken sinnvoll, zu denen der Preis, die Energieeffizienz und die Skalierbarkeit gehören.
+Ein Beispiel ist der Dragino LHT52 LoRaWAN Temperatursensor, der für 29,63~€ erhältlich ist und mehrere Jahre mit einer Batterie betrieben werden kann, bei einem Verbrauch von 18 Mikrowatt im Leerlauf bis 400 Milliwatt beim Senden~\cite{LHT52}.
+Um die Messdaten zu versenden, verwendet dieser IoT-Sensor LoRaWAN und als Endpunkt eine IoT-Plattform, weshalb die Skalierbarkeit von der verwendeten Plattform abhängt.
+Somit ist der Preis geringer als der des Prototyps, bei einer höheren Energieeffizienz und einer gleichzeitig ausreichenden Skalierbarkeit.
+Für Anwendungsfälle, in denen nicht alle Anforderungen erfüllt werden müssen, sind IoT-Sensoren eine kostengünstige und energieeffiziente Alternative.
+
+Das nächste betrachtete System sind Gateways, welche die Daten aus lokalen Netzwerken oder von Sensoren einem anderen Netzwerk zur Verfügung stellen.
+Diese sind nicht mit dem Prototyp vergleichbar, da sie keine Sensoren oder Aktuatoren enthalten und somit nur eine Schnittstelle zwischen den Sensoren und dem Server darstellen.
+
+Das nächste betrachtete System sind Messkoffer, wie der Stelzner Aktivitätsmesskoffer PET 2000, welcher in \cref{ch:stand-der-technik} beschrieben wurde.
+Er ist für 497,00~€ erhältlich und muss manuell bedient werden, weshalb der Einsatz nicht skalierbar ist~\cite{Stelzner}.
+Da der Preis höher ist als der des Prototyps und die Skalierbarkeit geringer, ist der Prototyp eine kostengünstigere und skalierbarere Alternative.
+
+Als Nächstes werden Sensor-Hubs wie der Universal Wireless Sensor Node oder der Loggito Logger betrachtet.
+Der Universal Wireless Sensor Node von Lemos International Company Inc ist nicht käuflich erhältlich und verfügt über keine Spezifikation, die den Stromverbrauch oder die Skalierbarkeit beschreibt, weshalb ein Vergleich nicht möglich ist.
+
+Auch für den Loggito Logger ist kein Preis verfügbar, vergleichbare Systeme wie der HIOKI LR8431-20 Datenlogger sind jedoch für einen niedrigen vierstelligen Betrag erhältlich~\cite{Hioki}.
+Der Stromverbrauch liegt bei zwischen 1 Milliwatt und 3 Watt, außerdem besitzt der Loggito Logger abhängig von der Konfiguration einen integrierten Akku~\cite{LoggitoStrom}, wobei für diesen keine Kapazität angegeben ist.
+Der Prototyp weist einen gleichen bis höheren Stromverbrauch auf, weshalb darauf geschlossen werden kann, dass der Loggito Logger zwar länger, aber nicht mehr als Tage ohne aufladen betrieben werden kann.
+Der Loggito Logger kann in ein Messnetzwerk integriert werden, wobei hier keine genaue Angabe zu der Größe dieses Netzwerks gemacht wird.
+Abgesehen davon weist er je nach Konfiguration bis zu 24 Eingänge auf und unterstützt Protokolle wie Modbus und OPC UA, nicht jedoch I2C oder SPI.
+Somit weist er eine ähnliche Skalierbarkeit zum Prototyp auf, wobei der Prototyp andere Protokolle unterstützt und im Gegensatz zum Loggito Logger einfach durch weitere Protokolle ergänzt werden kann.
+Für Anwendungsfälle, in denen nicht alle Anforderungen des Systems erfüllt werden müssen, ist es abhängig von den genauen Anforderungen, welches System besser geeignet ist.
+Insbesondere für Hobbygärtner ist der Loggito Logger aufgrund des vergleichsweise hohen Preises weniger geeignet.
+
+Als Nächstes wird SCAMPI betrachtet, welches als reines Forschungsprojekt nicht käuflich zu erwerben ist und auch keine Angaben zum Stromverbrauch macht.
+Fokus von SCAMPI ist der Einsatz in Lieferketten, wodurch die Skalierbarkeit für einen Einsatz in einem Garten vollkommen ausreichend ist.
+
+GreenIQ ist nicht mehr erhältlich, 2015 wurde der GreenIQ Smart Garden Hub aber für etwa 280~€ verkauft~\cite{GreenIQPreis}.
+Ähnlich wie der Prototyp verwendet GreenIQ einen Raspberry Pi, um das System zu realisieren und weist dementsprechend einen ähnlichen Stromverbrauch auf.
+Ausgelegt ist der Smart Garden Hub für sechs Bewässerungszonen, eine Pumpe und zwei direkt angeschlossene Sensoren, wobei weitere Sensoren über WLAN angeschlossen werden können, womit die Skalierbarkeit für einen Einsatz in einem kleinen Garten ausreichend ist.
+
+Als Nächstes wird Journeo als Industrial Remote Monitoring System betrachtet.
+Dieses System bindet unterschiedliche Sensoren und Kameras ein, die verschiedene Aufgaben in der Überwachung von Transportsystemen erfüllen.
+Der Preis für Journeo ist nicht öffentlich verfügbar, aber als industrielles System ist es für Privatpersonen nicht verfügbar.
+Auch Daten zum Stromverbrauch sind nicht verfügbar, wobei davon ausgegangen werden kann, dass dieser von den genutzten Komponenten abhängt, Überwachungskameras verbrauchen beispielsweise mehr Strom als Sensoren.
+Da Journeo für den Einsatz in ganzen Verkehrsnetzen konzipiert ist, ist die Skalierbarkeit gegeben.
+
+Als Letztes wird Jain Unity als Industrial Remote Monitoring and Control System betrachtet.
+Allein die Steuereinheit ETWater Smartbox Controller kostet je nach Anzahl der anschließbaren Stationen zwischen 2750~€ und 4300~€~\cite{ETWater}.
+Diese Steuereinheit ist fest installiert und benötigt eine feste Stromversorgung mit 120 Watt Leistung.
+Es können bis zu 48 Stationen angeschlossen werden, wobei es sich hierbei um Sensoren, Ventile und Pumpen handelt.
+Im Vergleich zum Prototyp ist Jain Unity deutlich teurer, verbraucht mehr Strom und ist weniger universell einsetzbar.
+Für den Einsatz in ganzen Bewässerungssystemen ist Jain Unity geeignet, für den Einsatz in der Zielgruppe jedoch nicht.
+
+\begin{table}[!htbp]
+	\centering
+	\caption[Gegebüberstellung der Metriken Preis, Energieeffizienz und Skalierbarkeit.]{
+		Übersicht über das Abschneiden der untersuchten Systeme bei den Metriken Preis, Energieeffizienz und Skalierbarkeit.
+		Hat ein System bei einer Metrik gut abgeschnitten, ist es für diese Metrik mit einem Häkchen markiert.
+		Gut bedeutet hierbei, dass es ein Argument für den Einsatz des Systems für die definierte Zielgruppe und Anforderungen ist.
+		Hat ein System bei einer Metrik schlecht abgeschnitten, ist es für diese Metrik mit einem Kreuz markiert.
+		Hierbei wird keine Aussage über die Eignung des Systems für andere Zielgruppen, Anwendungsfälle und Anforderungen getroffen.
+		Nicht anwendbare Metriken sind mit einem Schrägstrich markiert.
+	}\label{tab:prototyp-vergleich}
+	\begin{tabular}{llll}
+		System							& Preis	& Energieeffizienz	& Skalierbarkeit\\\hline
+		Prototyp						& \OK	& \NO				& \OK			\\
+		IoT-Sensoren					& \OK	& \OK				& \OK			\\
+		Gateways						& \NA	& \NA				& \NA			\\
+		Messkoffer						& \NO	& \NA				& \NO			\\
+		Universal Wireless Sensor Node	& \NA	& \NA				& \NA			\\
+		Loggito Logger					& \NO	& \NO				& \OK			\\
+		SCAMPI							& \NA	& \NA				& \OK			\\
+		GreenIQ							& \NA	& \NO				& \OK			\\
+		Journeo							& \NO	& \NO				& \OK			\\
+		Jain Unity						& \NO	& \NO				& \OK
+	\end{tabular}
+\end{table}
+
+Zusammengefasst weist der Prototyp im Vergleich mit bestehenden Systemen, die zwar nicht alle Anforderungen erfüllen, aber dennoch für einige Anwendungsfälle geeignet sind, sowohl Vorteile als auch Nachteile auf.
+Hierbei stellt \cref{tab:prototyp-vergleich} eine Übersicht darüber dar, wie die Systeme für die Metriken Preis, Energieeffizienz und Skalierbarkeit abschneiden.
+Dabei wird deutlich, dass IoT-Sensoren eine kostengünstige und energieeffiziente Alternative darstellen, die für Anwendungsfälle, in denen nicht alle Anforderungen erfüllt werden müssen, geeignet sind.
+Die weiteren Systeme schneiden in den Metriken schlechter ab als der Prototyp, weshalb sie für die Zielgruppe und Anforderungen weniger geeignet sind als der Prototyp.
+Weiterhin erfüllt der Prototyp nur die Metrik Energieeffizienz nicht, was bei der Verwendung eines Mikrocontrollers wie dem ESP32 behoben werden kann.
+
+
+
+\section{Zusammenfassung der Evaluation}
+Zusammengefasst erfüllt der Prototyp alle Anforderungen, die im zu realisierenden System definiert wurden.
+Dazu gehören die funktionalen Anforderungen Messung, Konfiguration, Regeldefinition und Dashboard, sowie die nicht funktionale Anforderung Preis.
+Zusätzlich erfüllt der Prototyp die nicht funktionalen Anforderungen Wartbarkeit und Unauffälligkeit, die funktionale Anforderung Benachrichtigung und erfüllt die nicht funktionalen Anforderungen Nutzerfreundlichkeit und Sicherheit teilweise.
+Er erfüllt die funktionalen Anforderungen Steuerung und autonomer Betrieb nicht und die nicht funktionalen Anforderungen Elementschutz, Energieverbrauch und Verfügbarkeit nicht.
+Diese Abweichungen von den Anforderungen sind auf die begrenzte Entwicklungszeit und den Umfang des Prototyps zurückzuführen und bieten wertvolle Ansätze für zukünftige Weiterentwicklungen.
+Sie stellen keinen Mangel des Konzepts dar, da alle Abweichungen durch eine Erweiterung des Prototyps beziehungsweise eine Anpassung der Platformwahl behoben werden können.
+
+Im Vergleich mit den Systemen IoT-Sensoren, Gateways, Messkoffer, Universal Wireless Sensor Node, Loggito Logger, Journeo und Jain Unity schneidet der Prototyp bei den Metriken Preis und Skalierbarkeit besser ab als die meisten betrachteten Systeme.
+Nur IoT-Sensoren sind in diesen Metriken besser, wobei der Prototyp in der Metrik Energieeffizienz schlechter abschneidet.
+Durch die Verwendung eines Mikrocontrollers wie dem ESP32 kann der Prototyp jedoch auch in dieser Metrik besser abschneiden und somit so wie IoT-Sensoren alle Metriken erfüllen.
+Insgesamt ist der Prototyp eine ein Nachweis, dass das Konzept umsetzbar ist und im Vergleich mit bestehenden Systemen eine kostengünstige und skalierbare Alternative darstellt, auch für Anwendungsfälle, in denen nicht alle Anforderungen notwendig sind wie bei einer reinen Messung von Umgebungsdaten.
